@@ -22,7 +22,7 @@ body{font-family:Inter,system-ui,-apple-system,sans-serif;
 .ks{ background:var(--felt); color:var(--ivory); min-height:100dvh;
   max-width:520px; margin:0 auto; position:relative;
   padding:calc(18px + env(safe-area-inset-top)) 16px
-          calc(78px + env(safe-area-inset-bottom)); }
+          calc(112px + env(safe-area-inset-bottom)); }
 .ks.flat{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
 /* ---------- type ---------- */
@@ -32,8 +32,7 @@ body{font-family:Inter,system-ui,-apple-system,sans-serif;
 .ks-h{font-family:'Bodoni Moda',Georgia,serif; font-size:19px; font-weight:600; margin:0 0 12px}
 .ks-note{color:var(--mute); font-size:13px; line-height:1.55; margin:0 0 14px}
 .ks-rule{border:0; border-top:1px solid var(--felt-3); margin:30px 0 22px}
-.ks-eyebrow{font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
-  color:var(--mute); margin:0 0 8px}
+.ks-eyebrow{font-size:13px; letter-spacing:.01em; color:var(--mute); margin:0 0 8px}
 
 /* ---------- form ---------- */
 .ks-field{display:block; margin-bottom:12px}
@@ -84,7 +83,7 @@ body{font-family:Inter,system-ui,-apple-system,sans-serif;
 .flip-in{animation:turn .55s cubic-bezier(.3,.8,.4,1) both}
 @keyframes turn{from{transform:rotateY(90deg)}to{transform:rotateY(0)}}
 .reveal-stage{display:flex; flex-direction:column; align-items:center;
-  justify-content:center; min-height:62dvh; text-align:center; gap:6px}
+  justify-content:center; min-height:76dvh; text-align:center; gap:6px}
 .reveal-stage .card-xl{width:170px; height:238px; flex:none}
 .reveal-stage .card-xl .pip{font-size:92px}
 .reveal-stage .card-xl .idx{font-size:26px; top:11px; left:13px}
