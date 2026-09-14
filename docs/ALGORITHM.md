@@ -91,6 +91,11 @@ disclosure never mentions this. Both engines now return an empty reading
 instead of throwing. **Product decision needed:** a Dec 31 user currently gets
 "no matches", which is a bad first run.
 
+Pending an answer, the prototype degrades rather than pretending: the reveal
+and both tabs say plainly that Dec 31 falls outside both spreads, so there is
+no ruling card and no Kindred Spirits list, and the feed is ordered on life
+path alone. It points at this question rather than inventing a rule.
+
 ## Known open question
 
 For May 31 the engine produces the 20 cards the disclosure's Output Example 1

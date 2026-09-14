@@ -17,8 +17,19 @@ engine/
   fixtures/
     appendix-b.json      70 rows transcribed from the disclosure's chart
     reference-1990.json  full-year Python output, regression only
+src/
+  App.jsx                onboarding -> reveal -> two tabs
+  theme.js               the whole stylesheet, one <style> block
+  lib/ranking.js         candidate scoring, calibrated to the Output Examples
+  lib/copy.js            reading prose, built from the actual match
+  fixtures/profiles.js   35 seeded candidates
+  components/            Card, Spread, CardTurn, Tabs
+  screens/               Onboarding, Reveal, Matches, MatchReading,
+                         AboutYou, BookReading
 app/
-  KindredSpirits.prototype.jsx   the single-file prototype the app grows from
+  KindredSpirits.prototype.jsx   the original single-file prototype, kept
+                                 for reference — it carries its own inlined
+                                 copy of the engine, so do not edit it
 docs/
   ALGORITHM.md           provenance, derivations, bugs found, open questions
   DESIGN.md              product flow, ranking rules, design tokens
@@ -28,9 +39,14 @@ CLAUDE.md                standing instructions for Claude Code
 ## Run
 
 ```sh
+npm install
+npm run dev           # the prototype, mobile viewport at ~390px
+npm run build         # static build in dist/, ready for Vercel
 npm test              # engine tests (Node 18+, no dependencies)
 npm run test:py       # Python reference self-test
 ```
+
+The engine tests need no dependencies; only the app does.
 
 ## State
 
@@ -38,8 +54,18 @@ The engine is done and verified: every reading matches the disclosure's five
 worked examples and ~70 dates transcribed from its Appendix B chart, and the JS
 and Python implementations agree across all 730 date × connection combinations.
 
-The app is one screen — a reading calculator. Turning it into the dating flow
-described in `docs/DESIGN.md` is the next piece of work.
+The dating flow in `docs/DESIGN.md` is built as a clickable prototype:
+onboarding with a card turn, a ranked match feed, the match reading, and an
+opt-in About you page with the astrologer entry point at its foot. Every
+reading comes from `engine/kindredEngine.js`; nothing is reimplemented.
+
+`docs/DESIGN.md` leaves one question open for the client — is the reading the
+hook on the feed, or the reward for connecting? Both feeds are built. A pill
+above the tab bar switches between them during the review.
+
+Not built, and deliberately: auth, messaging, payments, photos, the booking
+itself, and any deployment. `npm run build` produces a static `dist/` that
+Vercel serves as-is.
 
 ## Read this before changing the engine
 
