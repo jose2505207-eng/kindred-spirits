@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Card from "../components/Card.jsx";
+import Bowtie from "../components/Bowtie.jsx";
 import Spread, { SpreadLegend } from "../components/Spread.jsx";
 import BookReading from "./BookReading.jsx";
 import { JOKER } from "../../engine/kindredEngine.js";
@@ -8,7 +9,7 @@ import { JOKER } from "../../engine/kindredEngine.js";
  * The user's own full reading. Opt-in, never forced: nothing routes here, the
  * second tab is the only way in.
  */
-export default function AboutYou({ fc, name, business }) {
+export default function AboutYou({ fc, name, business, bowtie, onEditBowtie }) {
   const [which, setWhich] = useState("spiritual");
   const joker = fc.birthCard === JOKER;
   const ruler = fc.rulers.map((r) => r.planet).join(" and ");
@@ -20,6 +21,15 @@ export default function AboutYou({ fc, name, business }) {
         {name}, read as a {business ? "business" : "love"} connection — the{" "}
         {business ? "Jupiter offset of four" : "Venus offset of two"}.
       </p>
+
+      <div className="emblem">
+        <Bowtie bowtie={bowtie} size="lg" label="Your bowtie" />
+        <p className={`emblem-cap${bowtie.caption ? "" : " empty"}`}>
+          {bowtie.caption || "No caption yet."}
+        </p>
+        <button className="ks-ghost" onClick={onEditBowtie}>Edit your bowtie</button>
+      </div>
+      <hr className="ks-rule" />
 
       <div className="hero">
         <Card name={fc.birthCard} size="lg" />

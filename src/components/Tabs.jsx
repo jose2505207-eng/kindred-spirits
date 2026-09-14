@@ -1,21 +1,29 @@
 import React from "react";
 
+// The glyphs are tab icons, not cards.
+const TABS = [
+  ["matches", "♠", "Matches"],
+  ["messages", "♦", "Messages"],
+  ["bowties", "♣", "Bowties"],
+  ["you", "♥", "About you"],
+];
+
+export const TAB_LABEL = Object.fromEntries(TABS.map(([id, , label]) => [id, label]));
+
 /**
- * Two tabs, Matches first. docs/DESIGN.md: Matches is the landing surface and
- * the user is never routed through their own reading to reach people.
+ * Matches first. docs/DESIGN.md: Matches is the landing surface and the user
+ * is never routed through their own reading to reach people.
  */
 export default function Tabs({ tab, setTab }) {
   return (
     <nav className="tabs" role="tablist" aria-label="Sections">
       <div>
-        <button role="tab" aria-selected={tab === "matches"}
-          onClick={() => setTab("matches")}>
-          <i aria-hidden="true">♠</i>Matches
-        </button>
-        <button role="tab" aria-selected={tab === "you"}
-          onClick={() => setTab("you")}>
-          <i aria-hidden="true">♥</i>About you
-        </button>
+        {TABS.map(([id, glyph, label]) => (
+          <button key={id} role="tab" aria-selected={tab === id}
+            onClick={() => setTab(id)}>
+            <i aria-hidden="true">{glyph}</i>{label}
+          </button>
+        ))}
       </div>
     </nav>
   );

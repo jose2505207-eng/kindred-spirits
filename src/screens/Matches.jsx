@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../components/Card.jsx";
+import Bowtie from "../components/Bowtie.jsx";
 import { reasonFor } from "../lib/copy.js";
 import { JOKER } from "../../engine/kindredEngine.js";
 
@@ -87,6 +88,7 @@ function Row({ r, me, reveal, onOpen }) {
     <li>
       <button className={`row${reveal ? ` t${r.tier}` : ""}`}
         onClick={() => onOpen(p.id)}>
+        <Bowtie bowtie={p.bowtie} size="sm" />
         <Card name={p.fc.birthCard} size="sm" />
         <span className="who">
           <span className="nm">

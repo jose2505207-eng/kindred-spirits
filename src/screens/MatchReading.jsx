@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Card from "../components/Card.jsx";
+import Bowtie from "../components/Bowtie.jsx";
 import Spread, { SpreadLegend } from "../components/Spread.jsx";
 import { cardsParagraph, lifePathParagraph, closingLine } from "../lib/copy.js";
 
@@ -10,7 +11,8 @@ import { cardsParagraph, lifePathParagraph, closingLine } from "../lib/copy.js";
  * and the reading it opens can never disagree.
  */
 export default function MatchReading({
-  me, match, business, unlocked, onConnect, onBack,
+  me, match, business, unlocked, onConnect, onSayHello, onBack,
+  backLabel = "Matches",
 }) {
   const [which, setWhich] = useState("spiritual");
   const them = match.profile;
@@ -18,7 +20,12 @@ export default function MatchReading({
 
   return (
     <div className="ks flat">
-      <button className="back" onClick={onBack}>‹ Matches</button>
+      <button className="back" onClick={onBack}>‹ {backLabel}</button>
+
+      <div className="emblem">
+        <Bowtie bowtie={them.bowtie} size="lg" label={`${them.name}'s bowtie`} />
+        <p className="emblem-cap">{them.bowtie.caption}</p>
+      </div>
 
       <div className="pair">
         <figure>
@@ -31,6 +38,11 @@ export default function MatchReading({
           <figcaption><b>{them.name}</b>{them.fc.birthCard}</figcaption>
         </figure>
       </div>
+
+      <button className={unlocked ? "ks-go" : "ks-ghost"} onClick={onSayHello}
+        style={{ marginBottom: 18 }}>
+        Say hello
+      </button>
 
       {unlocked
         ? <Unlocked me={me} match={match} them={them} business={business}

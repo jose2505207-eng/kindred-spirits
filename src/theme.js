@@ -213,6 +213,87 @@ body{font-family:Inter,system-ui,-apple-system,sans-serif;
 .book p{font-size:13px; line-height:1.6; color:var(--mute); margin:0 0 14px}
 .book .ok{font-size:13px; line-height:1.6; color:var(--brass); margin:0}
 
+/* ---------- bowties ---------- */
+.bowtie{position:relative; display:inline-block; flex:none; width:var(--w);
+  aspect-ratio:120/72}
+.bowtie svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
+.bowtie .wing{fill:var(--tie); stroke:rgba(0,0,0,.3); stroke-width:1.5; stroke-linejoin:round}
+.bowtie .fold{fill:rgba(0,0,0,.16)}
+.bowtie .knot{position:absolute; left:50%; top:50%; width:44%; aspect-ratio:1;
+  transform:translate(-50%,-50%); border-radius:50%; background:var(--tie);
+  box-shadow:0 0 0 2px var(--felt-2), inset 0 0 0 1px rgba(0,0,0,.25);
+  display:flex; align-items:center; justify-content:center; overflow:hidden}
+.bowtie .knot img{width:100%; height:100%; object-fit:cover}
+.bowtie .face{line-height:1; font-size:calc(var(--w) * .24)}
+.bowtie-sm{--w:52px}
+.bowtie-md{--w:108px}
+.bowtie-lg{--w:168px}
+
+.emblem{display:flex; flex-direction:column; align-items:center; gap:9px;
+  margin:6px 0 18px; text-align:center}
+.emblem-cap{margin:0; max-width:320px; font-family:'Bodoni Moda',Georgia,serif;
+  font-size:16px; line-height:1.35}
+.emblem-cap.empty{font-family:inherit; font-size:13px; color:var(--mute)}
+.emblem .ks-ghost{width:auto; padding:9px 16px; font-size:13px}
+
+.wall{list-style:none; margin:0; padding:0; display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(148px,1fr)); gap:8px}
+.tile{width:100%; height:100%; display:flex; flex-direction:column; align-items:center;
+  gap:6px; padding:16px 10px 14px; text-align:center; border:1px solid var(--felt-3);
+  border-radius:4px; background:var(--felt-2); color:inherit; font:inherit; cursor:pointer}
+button.tile:active{background:var(--felt-3)}
+.tile b{font-size:14px; font-weight:600; margin-top:4px}
+.tile b em{font-style:normal; font-weight:400; font-size:12px; color:var(--brass); margin-left:6px}
+.tile p{margin:0; font-size:12.5px; line-height:1.4; color:#CFE0D7}
+.tile.mine{border-color:var(--brass); cursor:default}
+.tile .ks-ghost{margin-top:auto; padding:7px 10px; font-size:12.5px}
+
+.picks{display:grid; grid-template-columns:repeat(8,1fr); gap:6px; margin-bottom:12px}
+.picks button{aspect-ratio:1; padding:0; font-size:20px; line-height:1; cursor:pointer;
+  border:1px solid var(--felt-3); border-radius:3px; background:var(--felt-2)}
+.picks button[aria-pressed="true"]{border-color:var(--brass); background:var(--felt-3)}
+.swatches{display:flex; flex-wrap:wrap; gap:9px; align-items:center}
+.swatch{width:34px; height:34px; padding:0; border-radius:50%; cursor:pointer;
+  border:2px solid rgba(0,0,0,.35)}
+.swatch[aria-pressed="true"]{outline:2px solid var(--brass); outline-offset:2px}
+.swatch-custom{display:inline-flex; align-items:center; gap:8px; font-size:13px;
+  color:var(--mute); cursor:pointer}
+.swatch-custom input{width:38px; height:34px; padding:0; cursor:pointer;
+  border:1px solid var(--felt-3); border-radius:3px; background:var(--felt-2)}
+.swatch-custom.on{color:var(--brass)}
+.upload{display:block; text-align:center}
+.linkish{background:none; border:0; padding:10px 0 0; font:inherit; font-size:13px;
+  color:var(--mute); text-decoration:underline; cursor:pointer}
+.ks-field .count{float:right; font-style:normal}
+.problem{color:#E58A8A; font-size:13px; line-height:1.5; margin:8px 0 0}
+.actions{display:flex; gap:8px; margin-top:24px}
+.actions > *{flex:1}
+
+/* ---------- messages ---------- */
+.row .when{flex:none; align-self:flex-start; font-size:12px; color:var(--mute)}
+.thread-who{display:flex; align-items:center; gap:12px; padding-bottom:14px;
+  margin-bottom:16px; border-bottom:1px solid var(--felt-3)}
+.thread-who b{display:block; font-size:15px; font-weight:600}
+.thread-who span{display:block; font-size:12.5px; color:var(--mute); margin-top:1px}
+.thread{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.msg{max-width:80%; display:flex; flex-direction:column}
+.msg p{margin:0; padding:9px 12px; border-radius:14px; font-size:14.5px; line-height:1.45;
+  white-space:pre-wrap; overflow-wrap:anywhere}
+.msg time{font-size:11px; color:var(--mute); margin-top:3px}
+.msg.mine{align-self:flex-end; align-items:flex-end}
+.msg.mine p{background:var(--ivory); color:var(--ink); border-bottom-right-radius:4px}
+.msg.theirs{align-self:flex-start}
+.msg.theirs p{background:var(--felt-3); border-bottom-left-radius:4px}
+.thread-empty{color:var(--mute); font-size:13px; text-align:center; padding:28px 0}
+.composer{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--felt-2);
+  border-top:1px solid var(--felt-3);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.composer > div{max-width:488px; margin:0 auto; display:flex; gap:8px}
+.composer input{flex:1; min-width:0; padding:11px 13px; border-radius:3px; font:inherit;
+  font-size:16px; background:var(--felt); color:var(--ivory); border:1px solid var(--felt-3)}
+.composer input:focus{outline:2px solid var(--brass); outline-offset:1px}
+.composer .ks-go{width:auto; padding:0 18px}
+
 /* ---------- dev-only toggle for the client's open question ---------- */
 .devbar{position:fixed; z-index:30; left:0; right:0;
   bottom:calc(58px + env(safe-area-inset-bottom));
