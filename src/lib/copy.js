@@ -20,15 +20,15 @@ const first = (list) => list[0];
 export function reasonFor(ev, me, them) {
   const { rare, cmp, mutual, lp } = ev;
 
+  // Kept to roughly two lines at 390px — the feed clamps, and a clipped
+  // reason is worse than a shorter one. The full account is in the reading.
   if (rare.length) {
-    const c = first(rare);
-    return `Their ${roleOf(c, them)}, the ${c}, falls on both your Birth Card `
-      + `and Karma Card diagonals — the disclosure calls that rare.`;
+    return `The ${first(rare)} sits where your Birth Card and Karma Card `
+      + `diagonals cross.`;
   }
   if (mutual) {
     const mine = first(cmp.bMatches);
-    const theirs = first(cmp.aMatches);
-    return `Mutual: their ${theirs} is in your Kindred Spirits list, and your `
+    return `Mutual — their ${first(cmp.aMatches)} is in your list, and your `
       + `${roleOf(mine, me)} is in theirs.`;
   }
   if (cmp.aMatches.length) {
@@ -36,18 +36,18 @@ export function reasonFor(ev, me, them) {
     return `Their ${roleOf(c, them)}, the ${c}, is in your Kindred Spirits list.`;
   }
   if (cmp.bMatches.length) {
-    const c = first(cmp.bMatches);
-    return `Your ${roleOf(c, me)} is in their Kindred Spirits list.`;
+    return `Your ${roleOf(first(cmp.bMatches), me)} is in their Kindred `
+      + `Spirits list.`;
   }
   if (lp === "natural") {
     return `Life path ${me.lifePath} and ${them.lifePath} share a row of the `
-      + `Pythagorean matrix. No cards in common.`;
+      + `Pythagorean matrix.`;
   }
   if (lp === "lesser") {
     return `Life path ${me.lifePath} and ${them.lifePath} are compatible to a `
-      + `lesser extent. No cards in common.`;
+      + `lesser extent.`;
   }
-  return `No card appears in either list, and the life paths do not connect.`;
+  return `No cards in common, and the life paths do not connect.`;
 }
 
 /** The card paragraph of a match reading. */
