@@ -1,0 +1,425 @@
+{
+ "note": "chart-verified rows transcribed from Appendix B",
+ "rows": [
+  {
+   "month": 1,
+   "day": 1,
+   "birthCard": "KS",
+   "prc": "5C"
+  },
+  {
+   "month": 1,
+   "day": 2,
+   "birthCard": "QS",
+   "prc": "KC"
+  },
+  {
+   "month": 1,
+   "day": 3,
+   "birthCard": "JS",
+   "prc": "10D"
+  },
+  {
+   "month": 1,
+   "day": 4,
+   "birthCard": "10S",
+   "prc": "7D"
+  },
+  {
+   "month": 1,
+   "day": 5,
+   "birthCard": "9S",
+   "prc": "4C"
+  },
+  {
+   "month": 1,
+   "day": 6,
+   "birthCard": "8S",
+   "prc": "3C"
+  },
+  {
+   "month": 1,
+   "day": 7,
+   "birthCard": "7S",
+   "prc": "4D"
+  },
+  {
+   "month": 1,
+   "day": 8,
+   "birthCard": "6S",
+   "prc": "3H"
+  },
+  {
+   "month": 1,
+   "day": 9,
+   "birthCard": "5S",
+   "prc": "KH"
+  },
+  {
+   "month": 1,
+   "day": 10,
+   "birthCard": "4S",
+   "prc": "AD"
+  },
+  {
+   "month": 1,
+   "day": 11,
+   "birthCard": "3S",
+   "prc": "JC"
+  },
+  {
+   "month": 1,
+   "day": 12,
+   "birthCard": "2S",
+   "prc": "10C"
+  },
+  {
+   "month": 1,
+   "day": 13,
+   "birthCard": "AS",
+   "prc": "9C"
+  },
+  {
+   "month": 1,
+   "day": 14,
+   "birthCard": "KD",
+   "prc": "8C"
+  },
+  {
+   "month": 1,
+   "day": 15,
+   "birthCard": "QD",
+   "prc": "7C"
+  },
+  {
+   "month": 1,
+   "day": 16,
+   "birthCard": "JD",
+   "prc": "6C"
+  },
+  {
+   "month": 1,
+   "day": 17,
+   "birthCard": "10D",
+   "prc": "5H"
+  },
+  {
+   "month": 1,
+   "day": 18,
+   "birthCard": "9D",
+   "prc": "4H"
+  },
+  {
+   "month": 1,
+   "day": 19,
+   "birthCard": "8D",
+   "prc": "10S"
+  },
+  {
+   "month": 1,
+   "day": 20,
+   "birthCard": "7D",
+   "prc": "2H"
+  },
+  {
+   "month": 1,
+   "day": 21,
+   "birthCard": "6D",
+   "prc": "AH"
+  },
+  {
+   "month": 1,
+   "day": 22,
+   "birthCard": "5D",
+   "prc": "KC"
+  },
+  {
+   "month": 1,
+   "day": 23,
+   "birthCard": "4D",
+   "prc": "10C"
+  },
+  {
+   "month": 1,
+   "day": 24,
+   "birthCard": "3D",
+   "prc": "9C"
+  },
+  {
+   "month": 1,
+   "day": 25,
+   "birthCard": "2D",
+   "prc": "10D"
+  },
+  {
+   "month": 2,
+   "day": 1,
+   "birthCard": "JS",
+   "prc": "8S"
+  },
+  {
+   "month": 2,
+   "day": 2,
+   "birthCard": "10S",
+   "prc": "5S"
+  },
+  {
+   "month": 2,
+   "day": 3,
+   "birthCard": "9S",
+   "prc": "2D"
+  },
+  {
+   "month": 2,
+   "day": 4,
+   "birthCard": "8S",
+   "prc": "3S"
+  },
+  {
+   "month": 2,
+   "day": 5,
+   "birthCard": "7S",
+   "prc": "2S"
+  },
+  {
+   "month": 2,
+   "day": 6,
+   "birthCard": "6S",
+   "prc": "AC"
+  },
+  {
+   "month": 2,
+   "day": 7,
+   "birthCard": "5S",
+   "prc": "KD"
+  },
+  {
+   "month": 2,
+   "day": 8,
+   "birthCard": "4S",
+   "prc": "QD"
+  },
+  {
+   "month": 2,
+   "day": 9,
+   "birthCard": "3S",
+   "prc": "9D"
+  },
+  {
+   "month": 2,
+   "day": 10,
+   "birthCard": "2S",
+   "prc": "8D"
+  },
+  {
+   "month": 2,
+   "day": 11,
+   "birthCard": "AS",
+   "prc": "9S"
+  },
+  {
+   "month": 2,
+   "day": 12,
+   "birthCard": "KD",
+   "prc": "6D"
+  },
+  {
+   "month": 2,
+   "day": 13,
+   "birthCard": "QD",
+   "prc": "5D"
+  },
+  {
+   "month": 2,
+   "day": 14,
+   "birthCard": "JD",
+   "prc": "6S"
+  },
+  {
+   "month": 2,
+   "day": 15,
+   "birthCard": "10D",
+   "prc": "3C"
+  },
+  {
+   "month": 2,
+   "day": 16,
+   "birthCard": "9D",
+   "prc": "4D"
+  },
+  {
+   "month": 2,
+   "day": 17,
+   "birthCard": "8D",
+   "prc": "5C"
+  },
+  {
+   "month": 2,
+   "day": 18,
+   "birthCard": "7D",
+   "prc": "KH"
+  },
+  {
+   "month": 2,
+   "day": 19,
+   "birthCard": "6D",
+   "prc": "AD"
+  },
+  {
+   "month": 2,
+   "day": 20,
+   "birthCard": "5D",
+   "prc": "KC"
+  },
+  {
+   "month": 2,
+   "day": 21,
+   "birthCard": "4D",
+   "prc": "8D"
+  },
+  {
+   "month": 2,
+   "day": 22,
+   "birthCard": "3D",
+   "prc": "9S"
+  },
+  {
+   "month": 2,
+   "day": 23,
+   "birthCard": "2D",
+   "prc": "8S"
+  },
+  {
+   "month": 2,
+   "day": 24,
+   "birthCard": "AD",
+   "prc": "5D"
+  },
+  {
+   "month": 3,
+   "day": 1,
+   "birthCard": "9S",
+   "prc": "JS"
+  },
+  {
+   "month": 3,
+   "day": 2,
+   "birthCard": "8S",
+   "prc": "9H"
+  },
+  {
+   "month": 3,
+   "day": 3,
+   "birthCard": "7S",
+   "prc": "8H"
+  },
+  {
+   "month": 3,
+   "day": 4,
+   "birthCard": "6S",
+   "prc": "QC"
+  },
+  {
+   "month": 3,
+   "day": 5,
+   "birthCard": "5S",
+   "prc": "6H"
+  },
+  {
+   "month": 3,
+   "day": 6,
+   "birthCard": "4S",
+   "prc": "5H"
+  },
+  {
+   "month": 3,
+   "day": 7,
+   "birthCard": "3S",
+   "prc": "7S"
+  },
+  {
+   "month": 3,
+   "day": 8,
+   "birthCard": "2S",
+   "prc": "KS"
+  },
+  {
+   "month": 3,
+   "day": 9,
+   "birthCard": "AS",
+   "prc": "2H"
+  },
+  {
+   "month": 3,
+   "day": 10,
+   "birthCard": "KD",
+   "prc": "4S"
+  },
+  {
+   "month": 3,
+   "day": 11,
+   "birthCard": "QD",
+   "prc": "QS"
+  },
+  {
+   "month": 3,
+   "day": 12,
+   "birthCard": "JD",
+   "prc": "QH"
+  },
+  {
+   "month": 6,
+   "day": 19,
+   "birthCard": "JC",
+   "prc": "9D"
+  },
+  {
+   "month": 6,
+   "day": 20,
+   "birthCard": "10C",
+   "prc": "8D"
+  },
+  {
+   "month": 6,
+   "day": 21,
+   "birthCard": "9C",
+   "prc": "9S"
+  },
+  {
+   "month": 6,
+   "day": 22,
+   "birthCard": "8C",
+   "prc": "6D"
+  },
+  {
+   "month": 6,
+   "day": 23,
+   "birthCard": "7C",
+   "prc": "9H"
+  },
+  {
+   "month": 6,
+   "day": 24,
+   "birthCard": "6C",
+   "prc": "8H"
+  },
+  {
+   "month": 6,
+   "day": 25,
+   "birthCard": "5C",
+   "prc": "10S"
+  },
+  {
+   "month": 12,
+   "day": 30,
+   "birthCard": "AH",
+   "prc": null
+  },
+  {
+   "month": 12,
+   "day": 31,
+   "birthCard": "Joker",
+   "prc": null
+  }
+ ]
+}
