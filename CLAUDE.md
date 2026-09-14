@@ -26,7 +26,9 @@ Rules:
 
 This is a prototype for a single client review, not production. Prefer working
 screens over infrastructure. No auth, no database, no backend calls. Seeded
-fixture profiles only.
+fixture profiles only. Messages go through `src/lib/messaging.js`, an in-memory
+stub; nothing else may know where messages live, so a real backend can replace
+that one file.
 
 Do not add a state management library, a component library, or a test framework
 beyond `node:test`. If a dependency feels necessary, say why before adding it.

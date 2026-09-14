@@ -23,9 +23,13 @@ src/
   lib/ranking.js         candidate scoring, calibrated to the Output Examples
   lib/copy.js            reading prose, built from the actual match
   fixtures/profiles.js   35 seeded candidates
-  components/            Card, Spread, CardTurn, Tabs
+  lib/bowtie.js          bowtie shape, backdrops, emoji and image checks
+  lib/messaging.js       messaging transport: in-memory stub, swap for a backend
+  lib/useMessaging.js    React bindings for the transport
+  components/            Card, Spread, CardTurn, Tabs, Bowtie
   screens/               Onboarding, Reveal, Matches, MatchReading,
-                         AboutYou, BookReading
+                         AboutYou, BookReading, Messages, Thread,
+                         Community, BowtieEditor
 app/
   KindredSpirits.prototype.jsx   the original single-file prototype, kept
                                  for reference — it carries its own inlined

@@ -18,9 +18,9 @@ No accounts, no backend, no real users. Profiles are seeded fixtures.
      → one card-turn moment revealing your Birth Card
      → straight into Matches
                             ↓
-  ┌──────────────┬──────────────────┐
-  │   Matches    │    About you     │   ← two tabs
-  └──────────────┴──────────────────┘
+  ┌──────────┬──────────┬──────────┬───────────┐
+  │ Matches  │ Messages │ Bowties  │ About you │   ← four tabs
+  └──────────┴──────────┴──────────┴───────────┘
 ```
 
 **Matches** is the default landing surface. The user should never be forced
@@ -49,6 +49,22 @@ compatibility metric on top:
 The disclosure's own four Output Examples are the calibration: example 1 is "a
 natural fit", example 2 a strong business match, example 3 marginal, example 4
 a rejection. Match copy should sound like those.
+
+### Bowties
+
+A bowtie is a person's emblem in place of a photo: a face (an emoji or an
+uploaded image), a backdrop colour and a one-line caption. It shows on About
+you, beside each person in the matches feed, at the top of a match reading and
+on the Bowties wall, which lists everyone, yours first. It can be edited at any
+time from About you or the wall. The wall is unranked and gives no reading
+away, so it works in either feed mode.
+
+### Messages
+
+"Say hello" on a match reading opens a conversation. The transport is an
+in-memory stub in `src/lib/messaging.js`, which also documents what a real
+backend must expose. Seeded profiles reply once so a review thread is not
+silent; that behaviour lives only in the stub.
 
 ## Design direction
 
@@ -85,5 +101,6 @@ choose rather than picking one.
 
 ## Out of scope for the prototype
 
-Auth, messaging, payments, photo upload, the astrologer booking itself (the
+Auth, a messaging backend (the stub stands in), payments, photos (bowties
+stand in), the astrologer booking itself (the
 entry point is enough), push notifications, App Store or Play submission.
