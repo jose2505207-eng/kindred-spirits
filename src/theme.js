@@ -7,9 +7,9 @@
  * framework, no CSS-in-JS.
  */
 
+// The webfonts are linked from index.html, not imported here: an @import in
+// this string cannot start loading until React has mounted.
 export const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600;6..96,800&family=Inter:wght@400;500;600&display=swap');
-
 :root{ --felt:#0E241C; --felt-2:#081713; --felt-3:#16342A;
   --ivory:#F3EEE2; --ink:#16140F; --red:#BE1C2D; --brass:#C6A03C; --mute:#87A196; }
 
