@@ -7,8 +7,10 @@ birthdates, not from photos and shared interests. The reading is the product's
 whole reason to exist, so the interface has to make it feel earned and legible
 rather than like a horoscope generator.
 
-This repo is a **clickable prototype for client review**. It is not production.
-No accounts, no backend, no real users. Profiles are seeded fixtures.
+This repo is the app on a Supabase backend: accounts, profiles, photos,
+connections and messages are real. It is not yet in front of real people — see
+"Before real people use it" under the data model. `VITE_DEMO_MODE=true` keeps
+the original client-review build, on seeded fixture profiles with no accounts.
 
 ## The flow
 
@@ -61,10 +63,94 @@ away, so it works in either feed mode.
 
 ### Messages
 
-"Say hello" on a match reading opens a conversation. The transport is an
-in-memory stub in `src/lib/messaging.js`, which also documents what a real
-backend must expose. Seeded profiles reply once so a review thread is not
-silent; that behaviour lives only in the stub.
+"Say hello" on a match reading opens a conversation once the two of you are a
+mutual match. `src/lib/messaging.js` is the only file that knows where messages
+live: Supabase when signed in, with new messages pushed over Realtime, and an
+in-memory stub in demo mode, where seeded profiles reply once so a review thread
+is not silent.
+
+### Photos
+
+Up to six, managed on About you: add, caption, reorder, choose the primary,
+delete. Other members see them as a strip on your match reading, beside the
+reading rather than in place of it. The feed and the wall still show bowties.
+
+### Block and report
+
+At the foot of a match reading. A block takes both people out of each other's
+matches, wall, messages and photos, and neither can write to the other; the
+database enforces it, not the screens. A report goes to whoever moderates, and
+the reported person is not told.
+
+## Data model
+
+Supabase project `ofmlahcfcuhwykgzupey`. The schema is the migrations in
+`supabase/migrations/`, one per concern; `supabase/database.types.ts` is the
+generated description of the result. RLS is on for every table, and helpers
+that policies call live in the unexposed `private` schema.
+
+```
+auth.users ─1:1─ profiles ─1:n─ profile_photos ····· profile-photos/{user_id}/{uuid}.jpg
+                   │ bowtie_image_path ·············· profile-photos/{user_id}/{uuid}.png
+                   ├─ connections (from_profile → to_profile) ──▶ matches   (view)
+                   ├─ blocks      (blocker_id → blocked_id)
+                   ├─ reports     (reporter_id → reported_id, message_id)
+                   └─ conversation_participants ─n:1─ conversations ─1:n─ messages
+public_profiles (view over profiles, what the feed reads)
+cards (52 cards and the Joker, generated from the engine) ····· card-art/v1/{code}.svg
+```
+
+| Table or view | Holds | Read by | Written by |
+|---|---|---|---|
+| `profiles` | name, birthdate, love or business, bio, visibility, bowtie | you; others once onboarded, visible and not blocked either way | you; the row is created by a trigger on sign-up and only goes with the account |
+| `public_profiles` | the feed's columns | as `profiles` | — |
+| `profile_photos` | path, caption, position, primary | anyone who can see the profile | you; a photo is deleted by deleting its file |
+| `connections` | one-way connects | both ends, unless blocked | you, to someone you can see; you withdraw your own |
+| `matches` | mutual connections, with a canonical `pair_key` | as `connections` | — |
+| `blocks` | who blocked whom | the blocker only | the blocker |
+| `reports` | reason, optionally the message | the reporter only | the reporter; moderation reads with the service role |
+| `conversations` | `pair_key`, `last_message_at` | members, unless blocked | only `start_conversation()` |
+| `conversation_participants` | who is in each | as `conversations` | only `start_conversation()` |
+| `messages` | text, `sender_id`, `sent_at` | members, unless blocked | members, as themselves |
+| `cards` | code, engine name, rank, suit, `is_red`, art path | anyone, signed in or not | migrations only |
+
+What the database enforces, whatever a client sends:
+
+- An onboarded profile has a name and a birthdate; the backdrop is one of the
+  eight `BACKDROPS`; a bowtie caption is at most 60 characters.
+- `start_conversation(other)` returns the same conversation for the same pair
+  and refuses a pair that is not a mutual match or is blocked, with one message
+  for both so nobody learns they were blocked.
+- A message's `sender_id` must be the session, `sent_at` is the server's clock,
+  and a sender gets 20 messages a minute. `last_message_at` is kept by trigger.
+- Realtime publishes `messages`, `conversations` and `connections`, filtered by
+  each subscriber's own RLS.
+- Photo files can only be written inside their owner's folder. Deleting a file
+  removes its row and clears a bowtie that used it; a row cannot be written
+  before its file exists, or deleted on its own.
+
+Storage:
+
+- `profile-photos` is private: 5 MB, JPEG, PNG or WebP. Photos are shown through
+  signed URLs that last an hour, which only a member who can see the profile can
+  create.
+- `card-art` is public, SVG only, with no client writes;
+  `scripts/upload-card-art.mjs` fills it.
+
+What it never holds: a reading, a card assignment, a tier or a score.
+
+### Before real people use it
+
+- **Deleting an account.** There is no flow for it. Deleting a user removes
+  their rows but not their files, so it has to empty their photo folder through
+  the Storage API first.
+- **Stray uploads.** A file whose upload succeeded but whose row was never
+  written stays in the bucket. A periodic sweep would catch it.
+- **Auth settings.** Leaked password protection needs the Pro plan, and sign-up
+  confirmation emails need a real SMTP sender instead of Supabase's rate-limited
+  default.
+- **Signed photo URLs** work for anyone holding one until the hour is up.
+- **Birthdates** are visible to members; see the next section.
 
 ## Who can see a birth year
 
@@ -151,8 +237,7 @@ Does a match show its reading upfront as the hook, or only after both people
 connect? This changes the whole feed. Worth building both and letting him
 choose rather than picking one.
 
-## Out of scope for the prototype
+## Out of scope
 
-Auth, a messaging backend (the stub stands in), payments, photos (bowties
-stand in), the astrologer booking itself (the
-entry point is enough), push notifications, App Store or Play submission.
+Payments, the astrologer booking itself (the entry point is enough), push
+notifications, read receipts, App Store or Play submission.
