@@ -3,13 +3,16 @@ import Card from "../components/Card.jsx";
 import Bowtie from "../components/Bowtie.jsx";
 import Spread, { SpreadLegend } from "../components/Spread.jsx";
 import BookReading from "./BookReading.jsx";
+import { PhotoManager } from "../components/Photos.jsx";
 import { JOKER } from "../../engine/kindredEngine.js";
 
 /**
  * The user's own full reading. Opt-in, never forced: nothing routes here, the
  * second tab is the only way in.
  */
-export default function AboutYou({ fc, name, business, bowtie, onEditBowtie }) {
+export default function AboutYou({
+  fc, name, business, bowtie, onEditBowtie, memberId = null, onSignOut,
+}) {
   const [which, setWhich] = useState("spiritual");
   const joker = fc.birthCard === JOKER;
   const ruler = fc.rulers.map((r) => r.planet).join(" and ");
@@ -30,6 +33,13 @@ export default function AboutYou({ fc, name, business, bowtie, onEditBowtie }) {
         <button className="ks-ghost" onClick={onEditBowtie}>Edit your bowtie</button>
       </div>
       <hr className="ks-rule" />
+
+      {memberId && (
+        <>
+          <PhotoManager memberId={memberId} />
+          <hr className="ks-rule" />
+        </>
+      )}
 
       <div className="hero">
         <Card name={fc.birthCard} size="lg" />
@@ -95,6 +105,13 @@ export default function AboutYou({ fc, name, business, bowtie, onEditBowtie }) {
 
       <hr className="ks-rule" />
       <BookReading name={name} />
+
+      {onSignOut && (
+        <>
+          <hr className="ks-rule" />
+          <button className="ks-ghost" onClick={onSignOut}>Sign out</button>
+        </>
+      )}
     </div>
   );
 }

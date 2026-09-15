@@ -267,6 +267,40 @@ button.tile:active{background:var(--felt-3)}
 .problem{color:#E58A8A; font-size:13px; line-height:1.5; margin:8px 0 0}
 .actions{display:flex; gap:8px; margin-top:24px}
 .actions > *{flex:1}
+.linkish:disabled{opacity:.4; cursor:not-allowed}
+
+/* ---------- photos ---------- */
+.photos{list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:8px}
+.photo{display:flex; gap:12px; padding:10px; border:1px solid var(--felt-3); border-radius:4px;
+  background:var(--felt-2)}
+.photo.primary{border-color:var(--brass)}
+.photo img,.photo-missing{width:84px; height:84px; flex:none; object-fit:cover; border-radius:3px;
+  background:var(--felt-3)}
+.photo-missing{display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--mute)}
+.photo-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:8px}
+.photo-caption{width:100%; padding:8px 10px; border-radius:3px; font:inherit; font-size:16px;
+  background:var(--felt); color:var(--ivory); border:1px solid var(--felt-3)}
+.photo-caption:focus{outline:2px solid var(--brass); outline-offset:1px}
+.photo-actions{display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center}
+.photo-actions .linkish{padding:0}
+.photo-actions .danger{color:#E58A8A}
+.photo-flag{font-size:13px; color:var(--brass)}
+.photo-strip{list-style:none; margin:0 -16px 18px; padding:0 16px; display:flex; gap:8px;
+  overflow-x:auto; scroll-snap-type:x mandatory}
+.photo-strip li{flex:none; width:62%; max-width:260px; scroll-snap-align:start}
+.photo-strip figure{margin:0}
+.photo-strip img{display:block; width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:4px;
+  background:var(--felt-2)}
+.photo-strip figcaption{font-size:12.5px; line-height:1.4; color:var(--mute); margin-top:5px}
+
+/* ---------- safety and notices ---------- */
+.safety{display:flex; justify-content:center; gap:24px}
+.safety .linkish{padding:0}
+.notice{position:fixed; z-index:40; left:12px; right:12px; top:calc(8px + env(safe-area-inset-top));
+  max-width:496px; margin:0 auto; display:flex; gap:12px; align-items:center; padding:10px 14px;
+  border:1px solid var(--red); border-radius:4px; background:#3A1116; font-size:13px; line-height:1.45}
+.notice span{flex:1}
+.notice .linkish{padding:0; color:var(--ivory)}
 
 /* ---------- messages ---------- */
 .row .when{flex:none; align-self:flex-start; font-size:12px; color:var(--mute)}

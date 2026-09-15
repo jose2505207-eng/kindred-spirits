@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Card from "../components/Card.jsx";
 import Bowtie from "../components/Bowtie.jsx";
 import Spread, { SpreadLegend } from "../components/Spread.jsx";
+import { PhotoStrip } from "../components/Photos.jsx";
 import { cardsParagraph, lifePathParagraph, closingLine } from "../lib/copy.js";
 
 /**
@@ -12,7 +13,7 @@ import { cardsParagraph, lifePathParagraph, closingLine } from "../lib/copy.js";
  */
 export default function MatchReading({
   me, match, business, unlocked, onConnect, onSayHello, onBack,
-  backLabel = "Matches",
+  backLabel = "Matches", helloProblem = null, onBlock, onReport,
 }) {
   const [which, setWhich] = useState("spiritual");
   const them = match.profile;
@@ -26,6 +27,8 @@ export default function MatchReading({
         <Bowtie bowtie={them.bowtie} size="lg" label={`${them.name}'s bowtie`} />
         <p className="emblem-cap">{them.bowtie.caption}</p>
       </div>
+
+      <PhotoStrip profileId={them.id} name={them.name} />
 
       <div className="pair">
         <figure>
@@ -43,12 +46,104 @@ export default function MatchReading({
         style={{ marginBottom: 18 }}>
         Say hello
       </button>
+      {helloProblem && (
+        <p className="problem" role="alert" style={{ margin: "-8px 0 18px" }}>{helloProblem}</p>
+      )}
 
       {unlocked
         ? <Unlocked me={me} match={match} them={them} business={business}
             which={which} setWhich={setWhich} hit={hit} />
         : <Locked them={them} onConnect={onConnect} />}
+
+      {(onBlock || onReport) && <Safety name={them.name} onBlock={onBlock} onReport={onReport} />}
     </div>
+  );
+}
+
+/**
+ * Block and report. The database enforces a block — neither person can see or
+ * write to the other — so this only asks and records.
+ */
+function Safety({ name, onBlock, onReport }) {
+  const first = name.split(" ")[0];
+  const [step, setStep] = useState(null);     // null | "block" | "report" | "reported"
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState(null);
+
+  const run = async (fn, next) => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      await fn();
+      if (next) setStep(next);
+    } catch (e) {
+      setProblem(e.message);
+    }
+    setBusy(false);
+  };
+
+  return (
+    <>
+      <hr className="ks-rule" />
+      {step === null && (
+        <div className="safety">
+          {onBlock && (
+            <button type="button" className="linkish" onClick={() => setStep("block")}>
+              Block {first}
+            </button>
+          )}
+          {onReport && (
+            <button type="button" className="linkish" onClick={() => setStep("report")}>
+              Report {first}
+            </button>
+          )}
+        </div>
+      )}
+
+      {step === "block" && (
+        <>
+          <p className="ks-note">
+            {first} will drop out of your matches, messages and bowties, and you
+            out of theirs. Neither of you will be able to write to the other.
+          </p>
+          <div className="actions">
+            <button className="ks-ghost" disabled={busy} onClick={() => setStep(null)}>
+              Keep {first}
+            </button>
+            <button className="ks-go" disabled={busy} onClick={() => run(onBlock)}>
+              Block {first}
+            </button>
+          </div>
+        </>
+      )}
+
+      {step === "report" && (
+        <form onSubmit={(e) => { e.preventDefault(); run(() => onReport(reason), "reported"); }}>
+          <label className="ks-field">
+            <span>What happened?</span>
+            <textarea value={reason} maxLength={2000} onChange={(e) => setReason(e.target.value)} />
+          </label>
+          <p className="ks-note">{first} is not told that you reported them.</p>
+          <div className="actions">
+            <button type="button" className="ks-ghost" disabled={busy} onClick={() => setStep(null)}>
+              Cancel
+            </button>
+            <button type="submit" className="ks-go" disabled={busy || !reason.trim()}>
+              Send report
+            </button>
+          </div>
+        </form>
+      )}
+
+      {step === "reported" && (
+        <p className="ks-note">
+          Thank you. The report is with the people who look after Kindred Spirits.
+        </p>
+      )}
+
+      {problem && <p className="problem" role="alert">{problem}</p>}
+    </>
   );
 }
 
