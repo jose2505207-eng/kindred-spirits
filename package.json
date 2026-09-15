@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test \"engine/**/*.test.mjs\"",
+    "test": "node --test \"engine/**/*.test.mjs\" scripts/verify-cards.mjs && node scripts/generate-cards-migration.mjs --check",
     "test:py": "python3 engine/kindred_spirits.py"
   },
   "dependencies": {
