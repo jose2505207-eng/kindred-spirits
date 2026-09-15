@@ -66,6 +66,58 @@ in-memory stub in `src/lib/messaging.js`, which also documents what a real
 backend must expose. Seeded profiles reply once so a review thread is not
 silent; that behaviour lives only in the stub.
 
+## Who can see a birth year
+
+Ranking needs every candidate's full birthdate, year included: the engine reads
+day and month for the cards and the whole date for the Life Path. Wherever
+ranking runs has to hold everyone's birthdate. There are two places it can run.
+
+**A. On the client, over `public_profiles`. This is what we are on.**
+The `public_profiles` view gives a signed-in member the columns the feed needs
+— id, name, birthdate, bio and bowtie — for every other person who has onboarded,
+is visible, and has not blocked or been blocked by them. The client runs
+`rank()` unchanged. Simple, and the engine never leaves the app bundle.
+
+The cost is plain: **every signed-in member can read every visible member's
+exact date of birth**, through the view or straight from `profiles`. The view
+narrows columns and rows; it cannot hide the one field the engine needs. What
+does remove a person is `is_visible = false` or a block, both enforced in RLS.
+
+**B. On the server, in a `rank_candidates` Edge Function.**
+The function imports `engine/kindredEngine.js` and `src/lib/ranking.js`
+untouched (the engine imports nothing, so it runs in Deno as it is), reads
+birthdates with the service role, ranks, and returns per candidate only what
+the screens draw: display fields, the cards the match reading shows, the Life
+Path relationship and the tier. Never a birthdate, never a year. The profiles
+SELECT policy then narrows to your own row, and other people's display fields
+come from a view with no birthdate column.
+
+What B costs, and what it does not buy:
+
+- **The engine leaves the repo.** Its source is deployed to Supabase's Edge
+  Function infrastructure. That is private, but it is a second place the
+  confidential code lives.
+- **The cards still point at a birthday.** A Birth Card and a Planetary Ruling
+  Card together narrow a person to very few days of the year, so B hides the
+  year far better than it hides the day and month.
+- **Age gives the year back.** The feed shows each person's age. With the
+  birthday nearly known, an exact age is the year. B only protects the year if
+  the feed shows no age, or a range.
+- **Match readings need the other person's reading.** `MatchReading.jsx`
+  receives the candidate's full `fc`. B means the function returns a trimmed
+  reading, and the screen is changed to draw from that.
+
+If exact dates of birth must not be visible to other members, move to B and
+drop exact ages at the same time. Until then we are on A, knowingly.
+
+### No cached scores
+
+There is no `match_scores` table. A tier is only correct if the engine
+produced it. The database cannot compute one without reimplementing the
+engine, and a tier written by a client could be forged by that client. A cache
+earns its place once ranking moves server-side (option B), where the function
+can write scores keyed by `engine_version` and recompute them from scratch.
+
 ## Design direction
 
 Ground everything in the deck's own vernacular rather than generic mystic
