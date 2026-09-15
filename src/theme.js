@@ -77,6 +77,10 @@ body{font-family:Inter,system-ui,-apple-system,sans-serif;
 .card-back{background:
     repeating-linear-gradient(45deg,#3A1116 0 5px,#4A161C 5px 10px);
   border:2px solid var(--ivory)}
+.card .art{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.35))}
+.card .art.loading{opacity:0}
+.card.has-art{background:transparent; box-shadow:none}
 
 /* ---------- the one motion moment ---------- */
 .flip{perspective:900px}
