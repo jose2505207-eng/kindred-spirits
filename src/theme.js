@@ -256,11 +256,6 @@ button.tile:active{background:var(--felt-3)}
 .swatch{width:34px; height:34px; padding:0; border-radius:50%; cursor:pointer;
   border:2px solid rgba(0,0,0,.35)}
 .swatch[aria-pressed="true"]{outline:2px solid var(--brass); outline-offset:2px}
-.swatch-custom{display:inline-flex; align-items:center; gap:8px; font-size:13px;
-  color:var(--mute); cursor:pointer}
-.swatch-custom input{width:38px; height:34px; padding:0; cursor:pointer;
-  border:1px solid var(--felt-3); border-radius:3px; background:var(--felt-2)}
-.swatch-custom.on{color:var(--brass)}
 .upload{display:block; text-align:center}
 .linkish{background:none; border:0; padding:10px 0 0; font:inherit; font-size:13px;
   color:var(--mute); text-decoration:underline; cursor:pointer}

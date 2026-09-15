@@ -24,7 +24,6 @@ export default function BowtieEditor({ bowtie, onSave, onCancel }) {
   };
   const ready = kind === "emoji" || Boolean(draft.image);
   const same = (a, b) => a.toLowerCase() === b.toLowerCase();
-  const custom = !BACKDROPS.some((b) => same(b.hex, draft.backdrop));
 
   const onType = (e) => {
     const v = e.target.value;
@@ -114,11 +113,6 @@ export default function BowtieEditor({ bowtie, onSave, onCancel }) {
             aria-label={b.label} aria-pressed={same(b.hex, draft.backdrop)}
             style={{ background: b.hex }} onClick={() => set({ backdrop: b.hex })} />
         ))}
-        <label className={`swatch-custom${custom ? " on" : ""}`}>
-          <input type="color" value={draft.backdrop}
-            onChange={(e) => set({ backdrop: e.target.value })} />
-          Any colour
-        </label>
       </div>
 
       <hr className="ks-rule" />
