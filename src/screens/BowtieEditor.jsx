@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Bowtie from "../components/Bowtie.jsx";
+import { DEMO } from "../lib/supabase.js";
 import {
   BACKDROPS, CAPTION_MAX, EMOJI_PICKS, firstEmoji, readFaceImage,
 } from "../lib/bowtie.js";
@@ -13,6 +14,7 @@ export default function BowtieEditor({ bowtie, onSave, onCancel }) {
   const [kind, setKind] = useState(bowtie.image ? "image" : "emoji");
   const [typed, setTyped] = useState("");
   const [problem, setProblem] = useState(null);
+  const [saving, setSaving] = useState(false);
   const set = (patch) => setDraft((d) => ({ ...d, ...patch }));
 
   // An uploaded image stays in the draft while you look at emoji, so the
@@ -99,7 +101,7 @@ export default function BowtieEditor({ bowtie, onSave, onCancel }) {
             </button>
           )}
           <p className="ks-note" style={{ marginTop: 10 }}>
-            Cropped to a square. It stays on this phone.
+            Cropped to a square. {DEMO ? "It stays on this phone." : "It is saved with your profile."}
           </p>
         </>
       )}
@@ -123,9 +125,19 @@ export default function BowtieEditor({ bowtie, onSave, onCancel }) {
       </label>
 
       <div className="actions">
-        <button className="ks-ghost" onClick={onCancel}>Cancel</button>
-        <button className="ks-go" onClick={() => onSave(result)} disabled={!ready}>
-          Save bowtie
+        <button className="ks-ghost" onClick={onCancel} disabled={saving}>Cancel</button>
+        <button className="ks-go" disabled={!ready || saving}
+          onClick={async () => {
+            setSaving(true);
+            setProblem(null);
+            try {
+              await onSave(result);
+            } catch (err) {
+              setProblem(err.message);
+              setSaving(false);
+            }
+          }}>
+          {saving ? "Saving…" : "Save bowtie"}
         </button>
       </div>
     </div>
