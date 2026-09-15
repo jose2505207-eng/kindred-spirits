@@ -1,11 +1,12 @@
 /**
- * Imports card faces from Byron Knoll's SVG release into assets/card-art/.
+ * Imports card faces from Byron Knoll's SVG release into public/card-art/,
+ * which Vite serves with the app.
  *
  *   node scripts/import-card-art.mjs path/to/SVG-cards-1.3.zip
  *
  * Refuses a zip whose sha256 is not the one recorded below. Picks one upstream
  * file for every card name the engine produces, copies it byte for byte to
- * assets/card-art/v1/{code}.svg, and writes manifest.json recording which
+ * public/card-art/v1/{code}.svg, and writes manifest.json recording which
  * upstream file became which code and the hash of each. verify-cards.mjs
  * checks the result; this script only needs to run again for new art.
  */
@@ -29,8 +30,8 @@ export const SOURCE = {
   sha256: "b82309c8d82e198c2002b9b72a31de807a581386d2134a88199ac121c3d178e3",
 };
 
-const DIR = new URL(`../assets/card-art/${CARD_ART_VERSION}/`, import.meta.url);
-const MANIFEST = new URL("../assets/card-art/manifest.json", import.meta.url);
+const DIR = new URL(`../public/card-art/${CARD_ART_VERSION}/`, import.meta.url);
+const MANIFEST = new URL("../public/card-art/manifest.json", import.meta.url);
 const RANK_WORD = { A: "ace", J: "jack", Q: "queen", K: "king" };
 const COURTS = new Set(["J", "Q", "K"]);
 

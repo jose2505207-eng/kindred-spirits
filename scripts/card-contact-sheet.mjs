@@ -17,7 +17,7 @@ const OUT = new URL("card-contact-sheet.html", import.meta.url);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
 
 export function renderContactSheet() {
-  const manifest = JSON.parse(readFileSync(new URL("assets/card-art/manifest.json", ROOT), "utf8"));
+  const manifest = JSON.parse(readFileSync(new URL("public/card-art/manifest.json", ROOT), "utf8"));
   const byCode = new Map(manifest.cards.map((c) => [c.code, c]));
 
   // Index 1..52, then the Joker, which sits at 0 and in neither spread.
@@ -25,7 +25,7 @@ export function renderContactSheet() {
   order.push(0);
 
   const figure = (src, code, title, note, red) => `      <figure${red ? " class=\"red\"" : ""}>
-        <img src="../assets/card-art/${esc(src)}" alt="${esc(title)}">
+        <img src="../public/card-art/${esc(src)}" alt="${esc(title)}">
         <figcaption><b>${esc(code)}</b>${esc(title)}<small>${esc(note)}</small></figcaption>
       </figure>`;
 

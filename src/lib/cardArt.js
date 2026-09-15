@@ -2,9 +2,9 @@
  * Card art: the short code for each card and where its face is served from.
  *
  * Codes are built from the engine's own parts(), so the art can never be keyed
- * to a name the engine does not produce. The faces live in the public card-art
- * Storage bucket under a version prefix. assets/card-art/ holds the same files
- * and their provenance, and scripts/verify-cards.mjs checks them on every test
+ * to a name the engine does not produce. The faces ship with the app, in
+ * public/card-art/ under a version prefix alongside their provenance, so they
+ * load without an account; scripts/verify-cards.mjs checks them on every test
  * run.
  */
 
@@ -23,11 +23,10 @@ export function cardCode(name) {
   return p.rank && SUIT_CODE[p.suit] ? `${p.rank}${SUIT_CODE[p.suit]}` : null;
 }
 
-const BASE = import.meta.env?.VITE_SUPABASE_URL?.replace(/\/+$/, "");
+const BASE = (import.meta.env?.BASE_URL ?? "/").replace(/\/?$/, "/");
 
-/** Public URL of a card's face, or null when no backend is configured. */
+/** URL of a card's face in the app's own build, or null for a name with no code. */
 export function cardArtUrl(name) {
   const code = cardCode(name);
-  if (!BASE || !code) return null;
-  return `${BASE}/storage/v1/object/public/card-art/${CARD_ART_VERSION}/${code}.svg`;
+  return code ? `${BASE}card-art/${CARD_ART_VERSION}/${code}.svg` : null;
 }

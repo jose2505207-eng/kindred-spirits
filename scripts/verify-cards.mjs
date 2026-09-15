@@ -7,8 +7,8 @@
  * own corner indices print, the colour they print it in, and the suit symbol
  * it draws. Each file must
  * also be byte-identical to what the manifest records, distinct from every
- * other face, and free of anything executable, because the bucket serves it
- * publicly. The cards table migration is held to the same names and colours.
+ * other face, and free of anything executable, because it is served publicly
+ * with the app. The cards table migration is held to the same names and colours.
  */
 
 import test from "node:test";
@@ -19,7 +19,7 @@ import { SPIRITUAL_DECK, JOKER, parts } from "../engine/kindredEngine.js";
 import { BACK_CODE, CARD_ART_VERSION, JOKER_CODE, cardCode } from "../src/lib/cardArt.js";
 import { renderContactSheet } from "./card-contact-sheet.mjs";
 
-const ROOT = new URL("../assets/card-art/", import.meta.url);
+const ROOT = new URL("../public/card-art/", import.meta.url);
 const DIR = new URL(`${CARD_ART_VERSION}/`, ROOT);
 const MIGRATIONS = new URL("../supabase/migrations/", import.meta.url);
 

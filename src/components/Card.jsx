@@ -10,9 +10,9 @@ const ART_SIZES = new Set(["lg", "xl"]);
 /**
  * A card face. Carried over from app/KindredSpirits.prototype.jsx.
  *
- * At lg and xl the real face from the card-art bucket is laid over the drawn
- * card and shown once it has loaded. Until then, or if it cannot load, or with
- * no backend configured, the drawn card stays.
+ * At lg and xl the real face, served with the app from public/card-art/, is
+ * laid over the drawn card and shown once it has loaded. Until then, or if it
+ * cannot load, the drawn card stays.
  */
 export default function Card({ name, size = "chip", hit = false, className = "" }) {
   const p = parts(name);

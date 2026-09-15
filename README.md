@@ -40,11 +40,11 @@ src/
 supabase/
   migrations/            the schema, RLS and storage, one file per concern
   database.types.ts      generated description of the schema
-assets/card-art/         card faces (public domain) and their manifest
+public/card-art/         card faces (public domain) and their manifest, served with the app
 scripts/
   verify-cards.mjs       card art checked against the engine (runs in npm test)
   card-contact-sheet.*   every face on one page, for checking by eye
-  generate-cards-migration.mjs, import-card-art.mjs, upload-card-art.mjs
+  generate-cards-migration.mjs, import-card-art.mjs
   rls-proof.mjs          attacks the live RLS and prints what it refused
 app/
   KindredSpirits.prototype.jsx   the original single-file prototype, kept

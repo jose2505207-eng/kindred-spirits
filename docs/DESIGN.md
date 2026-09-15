@@ -97,7 +97,7 @@ auth.users ─1:1─ profiles ─1:n─ profile_photos ····· profile-photos
                    ├─ reports     (reporter_id → reported_id, message_id)
                    └─ conversation_participants ─n:1─ conversations ─1:n─ messages
 public_profiles (view over profiles, what the feed reads)
-cards (52 cards and the Joker, generated from the engine) ····· card-art/v1/{code}.svg
+cards (52 cards and the Joker, generated from the engine) ····· public/card-art/v1/{code}.svg (app bundle)
 ```
 
 | Table or view | Holds | Read by | Written by |
@@ -134,8 +134,11 @@ Storage:
 - `profile-photos` is private: 5 MB, JPEG, PNG or WebP. Photos are shown through
   signed URLs that last an hour, which only a member who can see the profile can
   create.
-- `card-art` is public, SVG only, with no client writes;
-  `scripts/upload-card-art.mjs` fills it.
+- Card faces are not in Storage. They ship in the app bundle under
+  `public/card-art/v1/`, so they load with no account and no call to Supabase,
+  and a `cards.image_path` such as `v1/AS.svg` is relative to that folder. The
+  `card-art` bucket created by an earlier migration is empty and unused; it
+  can be deleted from the dashboard.
 
 What it never holds: a reading, a card assignment, a tier or a score.
 
