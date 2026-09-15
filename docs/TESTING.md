@@ -147,10 +147,12 @@ membership.
 
 ## Advisors
 
-- **Security:** one warning, "Leaked password protection disabled". It is an
-  Auth setting that Supabase offers only on the Pro plan, and this project's
-  organization is on the free plan, so it cannot be switched on here. Nothing
-  else.
+- **Security:** during the test run, one warning: "Leaked password protection
+  disabled". It is an Auth setting that Supabase offers only on the Pro plan,
+  and this project's organization is on the free plan, so it cannot be switched
+  on here. A final run after the test accounts were removed returned no
+  findings at all, but the setting itself is still off, so expect the warning
+  to return once there are users. Nothing else was ever reported.
 - **Performance:** four "unused index" notices, on `blocks` and `reports`. Each
   index covers a foreign key; they are unused because those tables are nearly
   empty, and dropping them would raise the unindexed foreign key warning instead.
