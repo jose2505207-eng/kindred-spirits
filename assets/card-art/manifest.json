@@ -1,0 +1,338 @@
+{
+  "version": "v1",
+  "source": {
+    "name": "Vector Playing Cards 1.3 (SVG)",
+    "author": "Byron Knoll",
+    "license": "Public domain",
+    "licenseEvidence": "https://code.google.com/archive/p/vector-playing-cards/ — the author's project page: \"These images are released into the public domain - attribution is appreciated but not required.\"",
+    "download": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/vector-playing-cards/SVG-cards-1.3.zip",
+    "sha256": "b82309c8d82e198c2002b9b72a31de807a581386d2134a88199ac121c3d178e3"
+  },
+  "cards": [
+    {
+      "code": "10C",
+      "file": "v1/10C.svg",
+      "upstream": "10_of_clubs.svg",
+      "sha256": "9754f017f022e088975ef3b32cdd087088c77b4b2b77e3dfe2554ca4c7c6d316"
+    },
+    {
+      "code": "10D",
+      "file": "v1/10D.svg",
+      "upstream": "10_of_diamonds.svg",
+      "sha256": "47c7cd27aeabaea9d1cbfc491e1151f4c92364c7819b5c5a5e73e1a81fa788c2"
+    },
+    {
+      "code": "10H",
+      "file": "v1/10H.svg",
+      "upstream": "10_of_hearts.svg",
+      "sha256": "15880bbb866f07709b8804d522ec6efddaa03cc5c6d2165e6c14ccf946588072"
+    },
+    {
+      "code": "10S",
+      "file": "v1/10S.svg",
+      "upstream": "10_of_spades.svg",
+      "sha256": "ec9104cfa7038f6dc315b47c546317eb2555b098ce9941ee3e5058e2da7f177b"
+    },
+    {
+      "code": "2C",
+      "file": "v1/2C.svg",
+      "upstream": "2_of_clubs.svg",
+      "sha256": "7add295eca173f92a7e94923dd83d4be88c121fe1f80dd3498b6ed4a9362c51a"
+    },
+    {
+      "code": "2D",
+      "file": "v1/2D.svg",
+      "upstream": "2_of_diamonds.svg",
+      "sha256": "11ad0de2fa409f51f2dbd11ea70774661b825efb075688ee774ed57f2579fe14"
+    },
+    {
+      "code": "2H",
+      "file": "v1/2H.svg",
+      "upstream": "2_of_hearts.svg",
+      "sha256": "9d73eee3985b38f11fbb010a442eaa20a44ce94abb41ca6df3d8e61ed6256fac"
+    },
+    {
+      "code": "2S",
+      "file": "v1/2S.svg",
+      "upstream": "2_of_spades.svg",
+      "sha256": "8b3edf0f52c78935cb93fdb21628dcf725b44f8c686807daaa588fbbe7214747"
+    },
+    {
+      "code": "3C",
+      "file": "v1/3C.svg",
+      "upstream": "3_of_clubs.svg",
+      "sha256": "e7c9fa6309a2d8b303a32b65c0cced39c2f1891a7f912defac43d993d869c16d"
+    },
+    {
+      "code": "3D",
+      "file": "v1/3D.svg",
+      "upstream": "3_of_diamonds.svg",
+      "sha256": "fcef35d60cd4ca099b753110d8c32db8ebb1cdd6de201c8a759740b74ae8c7a9"
+    },
+    {
+      "code": "3H",
+      "file": "v1/3H.svg",
+      "upstream": "3_of_hearts.svg",
+      "sha256": "427797d5e06b9926dab40626b10b795cee2b7ac95d1c159436785f96730e767e"
+    },
+    {
+      "code": "3S",
+      "file": "v1/3S.svg",
+      "upstream": "3_of_spades.svg",
+      "sha256": "1e86577671ec30024f986006a4e3963a6d5909d19edf5641c034c9b1252ba7fd"
+    },
+    {
+      "code": "4C",
+      "file": "v1/4C.svg",
+      "upstream": "4_of_clubs.svg",
+      "sha256": "7bd407fb54268793ea80cec235670d5f5d7981f3d608cd90fbef321674205d4e"
+    },
+    {
+      "code": "4D",
+      "file": "v1/4D.svg",
+      "upstream": "4_of_diamonds.svg",
+      "sha256": "77b266d257d61ac2734eacf3c645e0be3eb4967be55aa7332111449daa1cb28b"
+    },
+    {
+      "code": "4H",
+      "file": "v1/4H.svg",
+      "upstream": "4_of_hearts.svg",
+      "sha256": "a28c9ad0ad57bd2c1b9afee9713d64dab290bd11f1c4e95af65e4b4dde9b0f8f"
+    },
+    {
+      "code": "4S",
+      "file": "v1/4S.svg",
+      "upstream": "4_of_spades.svg",
+      "sha256": "2760714bf1eabb0bae051a75cfbbe3403c2fd38011ed60d5e55bc231423f503c"
+    },
+    {
+      "code": "5C",
+      "file": "v1/5C.svg",
+      "upstream": "5_of_clubs.svg",
+      "sha256": "17ea29a3e9c70f742b938b6f133a8d12c8a5edbe73dead11a11d1e1c8d1dfed0"
+    },
+    {
+      "code": "5D",
+      "file": "v1/5D.svg",
+      "upstream": "5_of_diamonds.svg",
+      "sha256": "22821fe17b3c41909e6d2fba9d0ef306dbd493ca12df63c849f33bb3a2f773cd"
+    },
+    {
+      "code": "5H",
+      "file": "v1/5H.svg",
+      "upstream": "5_of_hearts.svg",
+      "sha256": "bc012b5dcb04708de1dfa67506a04b1ec7f6e212a3156e03ff44bcbe171eaec6"
+    },
+    {
+      "code": "5S",
+      "file": "v1/5S.svg",
+      "upstream": "5_of_spades.svg",
+      "sha256": "7729f6838b96314e28ad2c94771d658a6f0d4cafe80f4638c7d508fcaad13115"
+    },
+    {
+      "code": "6C",
+      "file": "v1/6C.svg",
+      "upstream": "6_of_clubs.svg",
+      "sha256": "4e3c50dc57415651d212223c452ce7555e80f41739bc20ea7ff56f19b21e0a9f"
+    },
+    {
+      "code": "6D",
+      "file": "v1/6D.svg",
+      "upstream": "6_of_diamonds.svg",
+      "sha256": "0539ebb73f07b326d32ccd69dfe802889d2a517d2654893521e3d09ff2dce1ae"
+    },
+    {
+      "code": "6H",
+      "file": "v1/6H.svg",
+      "upstream": "6_of_hearts.svg",
+      "sha256": "12aea20b64835b57d1e8e28d9852f35b581abe12531044df7eb7943a47303c29"
+    },
+    {
+      "code": "6S",
+      "file": "v1/6S.svg",
+      "upstream": "6_of_spades.svg",
+      "sha256": "1d56cd429abc5feab9bbf2254cad434cb4e5e61e2e5ca4517ad341167047bf45"
+    },
+    {
+      "code": "7C",
+      "file": "v1/7C.svg",
+      "upstream": "7_of_clubs.svg",
+      "sha256": "7e684abdd50a76b6acff616a7dd3866392fc8daa8a2a616a642fcd024983de76"
+    },
+    {
+      "code": "7D",
+      "file": "v1/7D.svg",
+      "upstream": "7_of_diamonds.svg",
+      "sha256": "913153ac472ee5a76f82e57b1aaede4f90a93f443ce80ddc78c202d151fc1708"
+    },
+    {
+      "code": "7H",
+      "file": "v1/7H.svg",
+      "upstream": "7_of_hearts.svg",
+      "sha256": "341b7075cc4cb32bd5e30d426adb1709e02f5a99b547d0de632f90d7c8ce2626"
+    },
+    {
+      "code": "7S",
+      "file": "v1/7S.svg",
+      "upstream": "7_of_spades.svg",
+      "sha256": "49a910eab9963fa75825eb5dab9613d5e33ae903580a050c32149c67c9883d41"
+    },
+    {
+      "code": "8C",
+      "file": "v1/8C.svg",
+      "upstream": "8_of_clubs.svg",
+      "sha256": "8f5b28dd1c3321e1511f6ecf32c184b3134bf3dceda6fd6e3bb034ad2c0468c8"
+    },
+    {
+      "code": "8D",
+      "file": "v1/8D.svg",
+      "upstream": "8_of_diamonds.svg",
+      "sha256": "dbe912366f941332b7b07c032fbbe927e09d616c37245149a26df03bc6ccbed2"
+    },
+    {
+      "code": "8H",
+      "file": "v1/8H.svg",
+      "upstream": "8_of_hearts.svg",
+      "sha256": "b8989945296253cdf3029d892ef05bdca90aa2b2f1fa5fe2b6d018e0d6c20412"
+    },
+    {
+      "code": "8S",
+      "file": "v1/8S.svg",
+      "upstream": "8_of_spades.svg",
+      "sha256": "0429e775b7efef53153f51f00b2780c96a2f355f0bed0ba8fb520ff697b52b07"
+    },
+    {
+      "code": "9C",
+      "file": "v1/9C.svg",
+      "upstream": "9_of_clubs.svg",
+      "sha256": "75b7b087ca1d94d9e2605cf40fbdf76a1f28961b6786e780d89c2057ada60971"
+    },
+    {
+      "code": "9D",
+      "file": "v1/9D.svg",
+      "upstream": "9_of_diamonds.svg",
+      "sha256": "907c8ea6a27bda9ebadebf50ca50fa7103a671366b99966cb61c0ac003ac116c"
+    },
+    {
+      "code": "9H",
+      "file": "v1/9H.svg",
+      "upstream": "9_of_hearts.svg",
+      "sha256": "a37373029883529c1be9aa46d142ced3dd3ab76b5bcb9f50098fb643976aea2c"
+    },
+    {
+      "code": "9S",
+      "file": "v1/9S.svg",
+      "upstream": "9_of_spades.svg",
+      "sha256": "168238e0988fc7f53e85fabcd11dc2d94f08e49a414202a501a8f10b32e44af2"
+    },
+    {
+      "code": "AC",
+      "file": "v1/AC.svg",
+      "upstream": "ace_of_clubs.svg",
+      "sha256": "8ec005af6f67d04144486bd23dc11648813db121a1854c7b99ca120221290ee3"
+    },
+    {
+      "code": "AD",
+      "file": "v1/AD.svg",
+      "upstream": "ace_of_diamonds.svg",
+      "sha256": "099c44595399d54fcfa8eca216a8a7a5b65a5c11bfabe3d64c1abf24d1ed54b8"
+    },
+    {
+      "code": "AH",
+      "file": "v1/AH.svg",
+      "upstream": "ace_of_hearts.svg",
+      "sha256": "de2ecf580d30c30930ae3a7249c61b9215c12d3718cb9d8a3d57b07e83d6be2e"
+    },
+    {
+      "code": "AS",
+      "file": "v1/AS.svg",
+      "upstream": "ace_of_spades.svg",
+      "sha256": "2e107bcfff5a06c66e4cebfca8e432720840974cab0900db1239de48fb832bb0"
+    },
+    {
+      "code": "JC",
+      "file": "v1/JC.svg",
+      "upstream": "jack_of_clubs2.svg",
+      "sha256": "bcc2997dce357462ed367d7ffca91ba6d73441b6e49614d17b112658ee9f1434"
+    },
+    {
+      "code": "JD",
+      "file": "v1/JD.svg",
+      "upstream": "jack_of_diamonds2.svg",
+      "sha256": "06da71ee248264bac1f98a370cbe495e0674dbd71aceff933b97ddfa1d5de659"
+    },
+    {
+      "code": "JH",
+      "file": "v1/JH.svg",
+      "upstream": "jack_of_hearts2.svg",
+      "sha256": "31d34eb3200d21a3ef6f81066a1aec877a91e4da7520e57cfa2cc0d33a4836e3"
+    },
+    {
+      "code": "JOK",
+      "file": "v1/JOK.svg",
+      "upstream": "black_joker.svg",
+      "sha256": "e08a03296ce82b38d5cf6c22dc2636014bff00f4706d5c5a1bd37f77b36ba7f6"
+    },
+    {
+      "code": "JS",
+      "file": "v1/JS.svg",
+      "upstream": "jack_of_spades2.svg",
+      "sha256": "90588d5da12a36b89988ce5f46cc45cf0f16e39dee18a26a39b9b04f879c81cb"
+    },
+    {
+      "code": "KC",
+      "file": "v1/KC.svg",
+      "upstream": "king_of_clubs2.svg",
+      "sha256": "f1d0c8c22a629db51f440e5605f8bd351213a3d35ace516bdba5b395b02064e9"
+    },
+    {
+      "code": "KD",
+      "file": "v1/KD.svg",
+      "upstream": "king_of_diamonds2.svg",
+      "sha256": "f778c231173f45924941133969c02d0bcd75c777396df351e6d823e7a0a36c08"
+    },
+    {
+      "code": "KH",
+      "file": "v1/KH.svg",
+      "upstream": "king_of_hearts2.svg",
+      "sha256": "416b0907601ecd1e692cd32fbe0b4c3d0b035991ca236f5f113b150368d80e45"
+    },
+    {
+      "code": "KS",
+      "file": "v1/KS.svg",
+      "upstream": "king_of_spades2.svg",
+      "sha256": "5902f595c43d78096b9a053bf8f7f7ca24646c1c887b3b6b5b685416907d81e5"
+    },
+    {
+      "code": "QC",
+      "file": "v1/QC.svg",
+      "upstream": "queen_of_clubs2.svg",
+      "sha256": "6d51fe2e418a7b16c97dc9130de55658ebaac2400fe71bb3e9024e5752500d93"
+    },
+    {
+      "code": "QD",
+      "file": "v1/QD.svg",
+      "upstream": "queen_of_diamonds2.svg",
+      "sha256": "1057fab72f1e62ae4fdbbc5976fd894742053648300f37278db778983f22fdbb"
+    },
+    {
+      "code": "QH",
+      "file": "v1/QH.svg",
+      "upstream": "queen_of_hearts2.svg",
+      "sha256": "c2731e8410e4e2b11f547c8736011291ef70dad599e1334940735f1dbb9fea20"
+    },
+    {
+      "code": "QS",
+      "file": "v1/QS.svg",
+      "upstream": "queen_of_spades2.svg",
+      "sha256": "20fb4a145eb6b834b048c2feeb1589bb0959dd1f5b2b887110c65cebefe5a984"
+    }
+  ],
+  "back": {
+    "code": "BACK",
+    "file": "v1/BACK.svg",
+    "upstream": null,
+    "origin": "Drawn for this repo from the .card-back rule in src/theme.js; not from the upstream deck.",
+    "sha256": "0d0e4a7720b812beae0ab809d2e315660cef83716edc38ea5dd0f14077904a6a"
+  }
+}

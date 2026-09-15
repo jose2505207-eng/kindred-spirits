@@ -13,11 +13,10 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { SPIRITUAL_DECK, JOKER, parts } from "../engine/kindredEngine.js";
+import { CARD_ART_VERSION, cardCode } from "../src/lib/cardArt.js";
 
 const DIR = new URL("../supabase/migrations/", import.meta.url).pathname;
 const DEFAULT_FILE = "20260915162458_cards.sql";
-const SUIT_CODE = { Hearts: "H", Clubs: "C", Diamonds: "D", Spades: "S" };
-const IMAGE_PREFIX = "v1";
 
 function fail(message) {
   console.error(`cards: ${message}`);
@@ -31,11 +30,8 @@ function buildRows() {
 
   const rows = names.map((name) => {
     const p = parts(name);
-    if (name === JOKER) {
-      return { code: "JOK", name, rank: p.rank, suit: null, isRed: p.red };
-    }
-    if (!(p.suit in SUIT_CODE) || !p.rank) fail(`cannot split "${name}"`);
-    const code = `${p.rank}${SUIT_CODE[p.suit]}`;
+    const code = cardCode(name);
+    if (!code) fail(`cannot derive a code for "${name}"`);
     return { code, name, rank: p.rank, suit: p.suit, isRed: p.red };
   });
 
@@ -52,7 +48,7 @@ const lit = (v) => (v === null ? "null" : typeof v === "boolean" ? String(v) : `
 
 function render(rows) {
   const values = rows
-    .map((r) => `  (${[r.code, r.name, r.rank, r.suit, r.isRed, `${IMAGE_PREFIX}/${r.code}.svg`].map(lit).join(", ")})`)
+    .map((r) => `  (${[r.code, r.name, r.rank, r.suit, r.isRed, `${CARD_ART_VERSION}/${r.code}.svg`].map(lit).join(", ")})`)
     .join(",\n");
 
   return `-- Cards: the 52 cards and the Joker, with where each face's art lives.
