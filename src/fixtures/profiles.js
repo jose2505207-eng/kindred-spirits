@@ -1,5 +1,6 @@
 /**
- * Seeded candidate profiles. No backend — these are the whole population.
+ * Seeded candidate profiles: the whole population in demo mode
+ * (VITE_DEMO_MODE=true), and unused when signed in.
  *
  * The birthdates are not decorative. They were chosen by searching the year
  * for a set of 35 that gives a genuine mix of verdicts for *any* user
@@ -19,8 +20,10 @@
  * src/lib/bowtie.js.
  */
 
-import { forecast } from "../../engine/kindredEngine.js";
 import { tie } from "../lib/bowtie.js";
+import { withReading } from "../lib/reading.js";
+
+export { ageOn } from "../lib/reading.js";
 
 export const PROFILES = [
   { name: "Rosa Delgado",       birthdate: "1993-01-05", bio: "Restores old bicycles. Cooks for six even when it's two.",
@@ -95,18 +98,7 @@ export const PROFILES = [
     bowtie: tie("🔭", "plum", "Up while the sun is down.") },
 ];
 
-export function ageOn(birthdate, today = new Date()) {
-  const [y, m, d] = birthdate.split("-").map(Number);
-  let age = today.getFullYear() - y;
-  const monthNow = today.getMonth() + 1;
-  if (monthNow < m || (monthNow === m && today.getDate() < d)) age -= 1;
-  return age;
-}
-
 /** The profiles with a reading attached, for the connection being read. */
 export function readProfiles(business) {
-  return PROFILES.map((p, i) => {
-    const [y, m, d] = p.birthdate.split("-").map(Number);
-    return { ...p, id: i, age: ageOn(p.birthdate), fc: forecast(m, d, y, business) };
-  });
+  return PROFILES.map((p, i) => withReading({ ...p, id: i }, business));
 }

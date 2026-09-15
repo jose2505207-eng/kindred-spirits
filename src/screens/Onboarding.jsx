@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DEMO } from "../lib/supabase.js";
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -11,6 +12,8 @@ export default function Onboarding({ onSubmit }) {
   const [name, setName] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [business, setBusiness] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState(null);
 
   const parsed = parseDate(birthdate);
   const ready = name.trim().length > 0 && parsed !== null;
@@ -23,9 +26,17 @@ export default function Onboarding({ onSubmit }) {
         its diagonals are the people you are drawn to.
       </p>
 
-      <form onSubmit={(e) => {
+      <form onSubmit={async (e) => {
         e.preventDefault();
-        if (ready) onSubmit({ name: name.trim(), birthdate, business });
+        if (!ready || busy) return;
+        setBusy(true);
+        setProblem(null);
+        try {
+          await onSubmit({ name: name.trim(), birthdate, business });
+        } catch (err) {
+          setProblem(err.message);
+          setBusy(false);
+        }
       }}>
         <label className="ks-field">
           <span>Your name</span>
@@ -48,14 +59,16 @@ export default function Onboarding({ onSubmit }) {
           </button>
         </div>
 
-        <button className="ks-go" type="submit" disabled={!ready}>
+        <button className="ks-go" type="submit" disabled={!ready || busy}>
           Turn my card
         </button>
       </form>
+      {problem && <p className="problem" role="alert">{problem}</p>}
 
       <p className="ks-note" style={{ marginTop: 18 }}>
-        Nothing is stored and nothing is sent anywhere. This is a prototype
-        running entirely on your phone.
+        {DEMO
+          ? "Nothing is stored and nothing is sent anywhere. This is a prototype running entirely on your phone."
+          : "Your name and birthdate are saved to your profile. Members who can see you can see your birthdate too, because it is what the cards are read from."}
       </p>
     </div>
   );
