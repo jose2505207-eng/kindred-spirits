@@ -351,6 +351,15 @@ button.tile:active{background:var(--felt-3)}
 .report-actions{display:flex; flex-wrap:wrap; gap:4px 18px; align-items:center}
 .report-actions .linkish{padding:0}
 
+/* ---------- demo build marker ---------- */
+/* Permanent, on every screen, and never in the way of a tap. */
+.demo-badge{position:fixed; z-index:50; left:8px;
+  bottom:calc(58px + env(safe-area-inset-bottom));
+  margin:0; padding:5px 10px; border-radius:999px; pointer-events:none;
+  font-size:11px; line-height:1; font-weight:600; letter-spacing:.02em;
+  color:var(--ink); background:var(--brass);
+  box-shadow:0 1px 0 rgba(0,0,0,.35)}
+
 /* ---------- dev-only toggle for the client's open question ---------- */
 .devbar{position:fixed; z-index:30; left:0; right:0;
   bottom:calc(58px + env(safe-area-inset-bottom));
