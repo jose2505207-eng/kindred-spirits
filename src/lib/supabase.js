@@ -120,6 +120,46 @@ export async function requestPasswordReset(email) {
   if (error) throw new Error(error.message);
 }
 
+/**
+ * Creates an account.
+ *
+ * Returns true when a confirmation email is on its way, which is this
+ * project's setting, and false if it ever signs people straight in instead.
+ * The confirmation link comes back to this app's own origin, so that origin
+ * has to be in the project's allowed redirect URLs.
+ */
+export async function signUp(email, password) {
+  if (!supabase) throw new Error("This build has no backend configured.");
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: { emailRedirectTo: window.location.origin },
+  });
+  if (error) throw new Error(error.message);
+  return !data.session;
+}
+
+/** Sends the confirmation email again, for an address that never confirmed. */
+export async function resendConfirmation(email) {
+  if (!supabase) throw new Error("This build has no backend configured.");
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: email.trim(),
+    options: { emailRedirectTo: window.location.origin },
+  });
+  if (error) throw new Error(error.message);
+}
+
+/** Signs in with an email and password. */
+export async function signIn(email, password) {
+  if (!supabase) throw new Error("This build has no backend configured.");
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
+  if (error) throw new Error(error.message);
+}
+
 /** Sets a new password and leaves recovery, which lets the app open. */
 export async function setNewPassword(password) {
   if (!supabase) throw new Error("This build has no backend configured.");

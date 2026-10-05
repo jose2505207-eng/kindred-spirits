@@ -161,10 +161,11 @@ export default function App({ memberId }) {
 
   if (stage === "onboarding") {
     return (
-      <Onboarding onSubmit={async (u) => {
-        setMe(await saveOnboarding(memberId, u));
-        setStage("reveal");
-      }} />
+      <Onboarding memberId={DEMO ? null : memberId}
+        onSubmit={async (u) => {
+          setMe(await saveOnboarding(memberId, u));
+          setStage("reveal");
+        }} />
     );
   }
 

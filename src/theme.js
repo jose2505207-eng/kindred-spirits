@@ -267,6 +267,7 @@ button.tile:active{background:var(--felt-3)}
 .problem{color:#E58A8A; font-size:13px; line-height:1.5; margin:8px 0 0}
 .actions{display:flex; gap:8px; margin-top:24px}
 .actions > *{flex:1}
+.stacked{display:flex; flex-direction:column; gap:10px; margin:26px 0 20px}
 .linkish:disabled{opacity:.4; cursor:not-allowed}
 
 /* ---------- photos ---------- */

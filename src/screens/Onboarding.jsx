@@ -3,6 +3,7 @@ import { DEMO } from "../lib/supabase.js";
 import { ageOn } from "../lib/reading.js";
 import { DEFAULT_GENDER, GENDERS, SEEKING } from "../lib/gender.js";
 import { PLACE_LABEL_MAX, RADIUS_OPTIONS, findMe } from "../lib/place.js";
+import { PhotoManager } from "../components/Photos.jsx";
 
 /**
  * 18+. The age-gate trigger in supabase/migrations refuses a younger birthdate
@@ -25,7 +26,7 @@ const ADULT_MAX = (() => {
  * else — this is the only thing standing between opening the app and seeing
  * people.
  */
-export default function Onboarding({ onSubmit }) {
+export default function Onboarding({ onSubmit, memberId = null }) {
   const [name, setName] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [business, setBusiness] = useState(false);
@@ -170,6 +171,22 @@ export default function Onboarding({ onSubmit }) {
             <b>Business</b>Jupiter offset of four
           </button>
         </div>
+
+        {memberId && (
+          // Photos belong to the profile row, which exists from sign-up, so
+          // they can be added before onboarding completes. The Enter guard is
+          // because a caption field inside a form would otherwise submit it.
+          <div onKeyDown={(e) => {
+            if (e.key === "Enter" && e.target.tagName === "INPUT") e.preventDefault();
+          }}>
+            <hr className="ks-rule" />
+            <PhotoManager memberId={memberId} />
+            <p className="ks-note">
+              Entirely optional, and you can add them later on About you. The
+              reading is what people see first either way.
+            </p>
+          </div>
+        )}
 
         <button className="ks-go" type="submit" disabled={!ready || busy}>
           Turn my card

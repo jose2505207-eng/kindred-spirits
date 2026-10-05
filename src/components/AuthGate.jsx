@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   DEMO, currentMember, isRecovering, missingConfig, onMemberChange, supabase,
 } from "../lib/supabase.js";
+import Welcome from "../screens/Welcome.jsx";
 import SignIn from "../screens/SignIn.jsx";
 import ResetPassword from "../screens/ResetPassword.jsx";
 
@@ -19,9 +20,16 @@ import ResetPassword from "../screens/ResetPassword.jsx";
  */
 export default function AuthGate({ children }) {
   const [member, setMember] = useState(currentMember);
+  // null until a visitor says which they want, so a first-time visitor is
+  // never shown a sign-in form for an account they do not have.
+  const [choice, setChoice] = useState(null);     // null | "up" | "in"
 
   useEffect(() => {
-    const off = onMemberChange(setMember);
+    const off = onMemberChange((next) => {
+      setMember(next);
+      // Signing out returns to the welcome screen rather than to a form.
+      if (!next.id) setChoice(null);
+    });
     setMember(currentMember());      // in case it changed before this subscribed
     return off;
   }, []);
@@ -30,7 +38,13 @@ export default function AuthGate({ children }) {
   if (missingConfig.length || !supabase) return <NotConfigured missing={missingConfig} />;
   if (!member.ready) return <div className="ks flat" aria-busy="true" />;
   if (isRecovering()) return <ResetPassword />;
-  if (!member.id) return <SignIn />;
+
+  if (!member.id) {
+    return choice
+      ? <SignIn initialMode={choice} onBack={() => setChoice(null)} />
+      : <Welcome onCreate={() => setChoice("up")} onSignIn={() => setChoice("in")} />;
+  }
+
   return children(member.id);
 }
 
