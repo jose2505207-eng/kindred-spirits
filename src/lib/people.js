@@ -12,12 +12,13 @@
 import { DEMO, supabase } from "./supabase.js";
 import { withReading } from "./reading.js";
 import { DEFAULT_BOWTIE } from "./bowtie.js";
+import { DEFAULT_GENDER, mutuallyInterested } from "./gender.js";
 import { dataUrlToBlob, PHOTO_BUCKET, signedUrls } from "./photos.js";
 import { readProfiles } from "../fixtures/profiles.js";
 
 const PROFILE_COLUMNS = "id, display_name, birthdate, business, bio, is_visible, onboarded_at, "
   + "bowtie_emoji, bowtie_image_path, bowtie_backdrop, bowtie_caption, "
-  + "suspended_at, suspended_reason";
+  + "suspended_at, suspended_reason, gender, interested_in";
 
 const fail = (error) => { if (error) throw new Error(error.message); };
 const ALREADY_EXISTS = "23505";
@@ -28,6 +29,7 @@ function toPerson(row, urls) {
     name: row.display_name,
     birthdate: row.birthdate,
     bio: row.bio ?? "",
+    gender: row.gender ?? DEFAULT_GENDER,
     bowtie: {
       emoji: row.bowtie_emoji,
       image: urls.get(row.bowtie_image_path) ?? null,
@@ -49,6 +51,9 @@ async function toMe(row) {
     // tell them why nothing works. See the report moderation migration.
     suspendedAt: row.suspended_at ?? null,
     suspendedReason: row.suspended_reason ?? null,
+    // Only ever your own: public_profiles does not expose interested_in,
+    // because who somebody is looking for is nobody else's business.
+    interestedIn: row.interested_in ?? [],
   };
 }
 
@@ -66,18 +71,37 @@ export async function loadMe(memberId) {
   return toMe(data);
 }
 
-/** The three onboarding fields, which make the profile visible to others. */
-export async function saveOnboarding(memberId, { name, birthdate, business }) {
+/** The onboarding fields, which make the profile visible to others. */
+export async function saveOnboarding(
+  memberId, { name, birthdate, business, gender, interestedIn },
+) {
   const onboardedAt = new Date().toISOString();
   if (DEMO) {
     demoMe = {
       id: "me", name, birthdate, business, bio: "", visible: true, onboardedAt,
+      gender: gender ?? DEFAULT_GENDER, interestedIn: interestedIn ?? [],
       bowtie: { ...DEFAULT_BOWTIE, imagePath: null },
     };
     return demoMe;
   }
   const { data, error } = await supabase.from("profiles")
-    .update({ display_name: name, birthdate, business, onboarded_at: onboardedAt })
+    .update({
+      display_name: name, birthdate, business, onboarded_at: onboardedAt,
+      gender: gender ?? DEFAULT_GENDER, interested_in: interestedIn ?? [],
+    })
+    .eq("id", memberId).select(PROFILE_COLUMNS).single();
+  fail(error);
+  return toMe(data);
+}
+
+/** Changing your gender or who you are interested in, after onboarding. */
+export async function saveInterest(memberId, { gender, interestedIn }) {
+  if (DEMO) {
+    demoMe = { ...demoMe, gender, interestedIn };
+    return demoMe;
+  }
+  const { data, error } = await supabase.from("profiles")
+    .update({ gender, interested_in: interestedIn })
     .eq("id", memberId).select(PROFILE_COLUMNS).single();
   fail(error);
   return toMe(data);
@@ -85,7 +109,14 @@ export async function saveOnboarding(memberId, { name, birthdate, business }) {
 
 /** Everyone the feed may rank, each with a reading for the connection being read. */
 export async function loadCandidates(business) {
-  if (DEMO) return readProfiles(business).filter((p) => !demoBlocked.has(p.id));
+  // Signed in, public_profiles has already dropped anyone the two of you are
+  // not mutually interested in. Demo mode has no database, so the same rule
+  // from src/lib/gender.js runs here instead.
+  if (DEMO) {
+    return readProfiles(business)
+      .filter((p) => !demoBlocked.has(p.id))
+      .filter((p) => !demoMe || mutuallyInterested(demoMe, p));
+  }
   const { data, error } = await supabase.from("public_profiles").select("*");
   fail(error);
   const urls = await signedUrls(data.map((row) => row.bowtie_image_path));

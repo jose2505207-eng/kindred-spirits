@@ -328,6 +328,14 @@ button.tile:active{background:var(--felt-3)}
 .composer input:focus{outline:2px solid var(--brass); outline-offset:1px}
 .composer .ks-go{width:auto; padding:0 18px}
 
+/* ---------- choice chips (gender, and who you are interested in) ---------- */
+.choices{display:flex; flex-wrap:wrap; gap:7px; margin:0 0 14px}
+.choices button{font:inherit; font-size:13px; cursor:pointer; padding:8px 13px;
+  border:1px solid var(--felt-3); border-radius:999px; background:var(--felt-2);
+  color:var(--mute)}
+.choices button[aria-pressed="true"]{border-color:var(--brass);
+  background:var(--felt-3); color:var(--ivory)}
+
 /* ---------- moderation ---------- */
 .report{border:1px solid var(--felt-3); border-radius:4px; background:var(--felt-2);
   padding:13px 14px; margin-bottom:10px}

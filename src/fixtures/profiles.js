@@ -98,7 +98,40 @@ export const PROFILES = [
     bowtie: tie("🔭", "plum", "Up while the sun is down.") },
 ];
 
+/**
+ * Genders for the seeded 35, kept apart from the entries above so adding them
+ * did not mean rewriting every line. Every fixture is interested in everyone,
+ * so in demo mode the mutual-interest filter is driven entirely by the
+ * viewer's own answer — enough to watch it work without inventing 35 more
+ * preferences. See src/lib/gender.js.
+ */
+const GENDER = {
+  "Rosa Delgado": "woman",        "Ines Okonkwo": "woman",
+  "Marcus Reyner": "man",         "Priya Balakrishnan": "woman",
+  "Theo Lindqvist": "man",        "Amara Boateng": "woman",
+  "Dev Chaudhary": "man",         "Noor Haddad": "non_binary",
+  "Elliot Vance": "man",          "Sunniva Bergström": "woman",
+  "Kwame Asante": "man",          "Beatriz Salgado": "woman",
+  "Yusuf Demir": "man",           "Halina Wozniak": "woman",
+  "Camille Trudeau": "non_binary", "Rafael Ferreira": "man",
+  "Mei-Lin Chow": "woman",        "Jonah Adeyemi": "man",
+  "Sofia Kalogeras": "woman",     "Tobias Brandt": "man",
+  "Anjali Rao": "woman",          "Gregor Novak": "prefer_not_to_say",
+  "Zainab Al-Rashid": "woman",    "Felix Moreau": "man",
+  "Nadia Petrova": "woman",       "Idris Cole": "man",
+  "Leona Kaur": "prefer_not_to_say", "Marco Bellini": "man",
+  "Thandiwe Mbeki": "woman",      "Anders Holm": "man",
+  "Valentina Cruz": "woman",      "Omar Sultani": "man",
+  "Hazel Brennan": "woman",       "Stefan Kovac": "man",
+  "Juno Nakamura": "non_binary",
+};
+
 /** The profiles with a reading attached, for the connection being read. */
 export function readProfiles(business) {
-  return PROFILES.map((p, i) => withReading({ ...p, id: i }, business));
+  return PROFILES.map((p, i) => withReading({
+    ...p,
+    id: i,
+    gender: GENDER[p.name] ?? "prefer_not_to_say",
+    interestedIn: [],
+  }, business));
 }

@@ -5,6 +5,7 @@ import Spread, { SpreadLegend } from "../components/Spread.jsx";
 import BookReading from "./BookReading.jsx";
 import { PhotoManager } from "../components/Photos.jsx";
 import { JOKER } from "../../engine/kindredEngine.js";
+import { GENDERS, SEEKING, genderLabel } from "../lib/gender.js";
 
 /**
  * The user's own full reading. Opt-in, never forced: nothing routes here, the
@@ -13,6 +14,7 @@ import { JOKER } from "../../engine/kindredEngine.js";
 export default function AboutYou({
   fc, name, business, bowtie, onEditBowtie, memberId = null, onSignOut,
   onDeleteAccount, onModerate,
+  gender, interestedIn = [], onSaveInterest,
 }) {
   const [which, setWhich] = useState("spiritual");
   const joker = fc.birthCard === JOKER;
@@ -34,6 +36,13 @@ export default function AboutYou({
         <button className="ks-ghost" onClick={onEditBowtie}>Edit your bowtie</button>
       </div>
       <hr className="ks-rule" />
+
+      {onSaveInterest && (
+        <>
+          <Interest gender={gender} interestedIn={interestedIn} onSave={onSaveInterest} />
+          <hr className="ks-rule" />
+        </>
+      )}
 
       {memberId && (
         <>
@@ -128,6 +137,96 @@ export default function AboutYou({
 
       {onDeleteAccount && <DeleteAccount onDelete={onDeleteAccount} />}
     </div>
+  );
+}
+
+/**
+ * Gender, and who you are interested in. Changing either changes who is a
+ * candidate at all: public_profiles drops anyone the two of you are not
+ * mutually interested in before the engine ever sees them.
+ */
+function Interest({ gender, interestedIn, onSave }) {
+  const [editing, setEditing] = useState(false);
+  const [g, setG] = useState(gender);
+  const [want, setWant] = useState(interestedIn);
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState(null);
+
+  const toggle = (id) => setWant((prev) =>
+    prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+
+  const start = () => { setG(gender); setWant(interestedIn); setProblem(null); setEditing(true); };
+
+  const save = async () => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      await onSave({ gender: g, interestedIn: want });
+      setEditing(false);
+    } catch (e) {
+      setProblem(e.message);
+    }
+    setBusy(false);
+  };
+
+  const looking = interestedIn.length === 0
+    ? "everyone"
+    : interestedIn.map((id) => genderLabel(id).toLowerCase()).join(" and ");
+
+  if (!editing) {
+    return (
+      <>
+        <h2 className="ks-h">You, and who you are looking for</h2>
+        <p className="ks-note">
+          {genderLabel(gender)}, interested in {looking}.
+        </p>
+        <button className="ks-ghost" onClick={start}>Change this</button>
+        {problem && <p className="problem" role="alert">{problem}</p>}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <h2 className="ks-h">You, and who you are looking for</h2>
+
+      <div className="ks-field">
+        <span>You are</span>
+        <div className="choices" role="group" aria-label="Your gender">
+          {GENDERS.map((o) => (
+            <button key={o.id} type="button" aria-pressed={g === o.id}
+              onClick={() => setG(o.id)}>
+              {o.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="ks-field">
+        <span>You are interested in<em className="count">choose any</em></span>
+        <div className="choices" role="group" aria-label="Who you are interested in">
+          {SEEKING.map((o) => (
+            <button key={o.id} type="button" aria-pressed={want.includes(o.id)}
+              onClick={() => toggle(o.id)}>
+              {o.label}
+            </button>
+          ))}
+        </div>
+        <p className="ks-note" style={{ margin: 0 }}>
+          Choose none to see everyone.
+        </p>
+      </div>
+
+      <div className="actions">
+        <button className="ks-ghost" disabled={busy} onClick={() => setEditing(false)}>
+          Cancel
+        </button>
+        <button className="ks-go" disabled={busy} onClick={save}>
+          {busy ? "Saving…" : "Save"}
+        </button>
+      </div>
+      {problem && <p className="problem" role="alert">{problem}</p>}
+    </>
   );
 }
 

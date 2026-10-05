@@ -4,7 +4,7 @@ import { readingFor } from "./lib/reading.js";
 import { DEMO, deleteAccount, signOut } from "./lib/supabase.js";
 import {
   block, connect, loadCandidates, loadConnected, loadMe, report, saveBowtie,
-  saveOnboarding, watchConnections,
+  saveInterest, saveOnboarding, watchConnections,
 } from "./lib/people.js";
 import { ME, personId, startConversation } from "./lib/messaging.js";
 import { amIModerator } from "./lib/moderation.js";
@@ -218,7 +218,12 @@ export default function App({ memberId }) {
                   memberId={DEMO ? null : memberId}
                   onSignOut={DEMO ? undefined : signOut}
                   onDeleteAccount={DEMO ? undefined : deleteAccount}
-                  onModerate={moderator ? () => setModerating(true) : undefined} />}
+                  onModerate={moderator ? () => setModerating(true) : undefined}
+                  gender={me.gender} interestedIn={me.interestedIn}
+                  onSaveInterest={async (next) => {
+                    setMe(await saveInterest(memberId, next));
+                    await refresh();
+                  }} />}
 
       {!open && <Tabs tab={tab} setTab={setTab} />}
 

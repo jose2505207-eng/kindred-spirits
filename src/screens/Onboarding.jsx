@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { DEMO } from "../lib/supabase.js";
 import { ageOn } from "../lib/reading.js";
+import { DEFAULT_GENDER, GENDERS, SEEKING } from "../lib/gender.js";
 
 /**
  * 18+. The age-gate trigger in supabase/migrations refuses a younger birthdate
@@ -27,8 +28,13 @@ export default function Onboarding({ onSubmit }) {
   const [name, setName] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [business, setBusiness] = useState(false);
+  const [gender, setGender] = useState(DEFAULT_GENDER);
+  const [interestedIn, setInterestedIn] = useState([]);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState(null);
+
+  const toggleInterest = (id) => setInterestedIn((prev) =>
+    prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
 
   const parsed = parseDate(birthdate);
   const underage = parsed !== null && ageOn(birthdate) < MIN_AGE;
@@ -48,7 +54,7 @@ export default function Onboarding({ onSubmit }) {
         setBusy(true);
         setProblem(null);
         try {
-          await onSubmit({ name: name.trim(), birthdate, business });
+          await onSubmit({ name: name.trim(), birthdate, business, gender, interestedIn });
         } catch (err) {
           setProblem(err.message);
           setBusy(false);
@@ -70,6 +76,34 @@ export default function Onboarding({ onSubmit }) {
             Kindred Spirits is for people of 18 and over.
           </p>
         )}
+
+        <div className="ks-field">
+          <span>You are</span>
+          <div className="choices" role="group" aria-label="Your gender">
+            {GENDERS.map((g) => (
+              <button key={g.id} type="button" aria-pressed={gender === g.id}
+                onClick={() => setGender(g.id)}>
+                {g.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="ks-field">
+          <span>You are interested in<em className="count">choose any</em></span>
+          <div className="choices" role="group" aria-label="Who you are interested in">
+            {SEEKING.map((g) => (
+              <button key={g.id} type="button" aria-pressed={interestedIn.includes(g.id)}
+                onClick={() => toggleInterest(g.id)}>
+                {g.label}
+              </button>
+            ))}
+          </div>
+          <p className="ks-note" style={{ margin: 0 }}>
+            Choose none to see everyone. You only appear to people you are
+            interested in, who are interested in you.
+          </p>
+        </div>
 
         <div className="ks-seg" role="group" aria-label="What you are looking for">
           <button type="button" aria-pressed={!business} onClick={() => setBusiness(false)}>

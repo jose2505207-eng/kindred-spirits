@@ -334,7 +334,9 @@ export type Database = {
           business: boolean
           created_at: string
           display_name: string
+          gender: Database["public"]["Enums"]["gender_option"]
           id: string
+          interested_in: Database["public"]["Enums"]["gender_option"][]
           is_visible: boolean
           onboarded_at: string | null
           suspended_at: string | null
@@ -351,7 +353,9 @@ export type Database = {
           business?: boolean
           created_at?: string
           display_name?: string
+          gender?: Database["public"]["Enums"]["gender_option"]
           id: string
+          interested_in?: Database["public"]["Enums"]["gender_option"][]
           is_visible?: boolean
           onboarded_at?: string | null
           suspended_at?: string | null
@@ -368,7 +372,9 @@ export type Database = {
           business?: boolean
           created_at?: string
           display_name?: string
+          gender?: Database["public"]["Enums"]["gender_option"]
           id?: string
+          interested_in?: Database["public"]["Enums"]["gender_option"][]
           is_visible?: boolean
           onboarded_at?: string | null
           suspended_at?: string | null
@@ -518,34 +524,15 @@ export type Database = {
           bowtie_emoji: string | null
           bowtie_image_path: string | null
           display_name: string | null
+          gender: Database["public"]["Enums"]["gender_option"] | null
           id: string | null
-        }
-        Insert: {
-          bio?: string | null
-          birthdate?: string | null
-          bowtie_backdrop?: string | null
-          bowtie_caption?: string | null
-          bowtie_emoji?: string | null
-          bowtie_image_path?: string | null
-          display_name?: string | null
-          id?: string | null
-        }
-        Update: {
-          bio?: string | null
-          birthdate?: string | null
-          bowtie_backdrop?: string | null
-          bowtie_caption?: string | null
-          bowtie_emoji?: string | null
-          bowtie_image_path?: string | null
-          display_name?: string | null
-          id?: string | null
         }
         Relationships: []
       }
     }
     Functions: {
       set_profile_suspended: {
-        Args: { target: string; reason?: string; suspended?: boolean }
+        Args: { reason?: string; suspended?: boolean; target: string }
         Returns: {
           bio: string | null
           birthdate: string | null
@@ -556,7 +543,9 @@ export type Database = {
           business: boolean
           created_at: string
           display_name: string
+          gender: Database["public"]["Enums"]["gender_option"]
           id: string
+          interested_in: Database["public"]["Enums"]["gender_option"][]
           is_visible: boolean
           onboarded_at: string | null
           suspended_at: string | null
@@ -587,6 +576,7 @@ export type Database = {
       }
     }
     Enums: {
+      gender_option: "woman" | "man" | "non_binary" | "prefer_not_to_say"
       report_status: "open" | "actioned" | "dismissed"
     }
     CompositeTypes: {
@@ -715,6 +705,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      gender_option: ["woman", "man", "non_binary", "prefer_not_to_say"],
       report_status: ["open", "actioned", "dismissed"],
     },
   },
