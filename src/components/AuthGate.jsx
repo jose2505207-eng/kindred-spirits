@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { DEMO, currentMember, isRecovering, onMemberChange, supabase } from "../lib/supabase.js";
+import {
+  DEMO, currentMember, isRecovering, missingConfig, onMemberChange, supabase,
+} from "../lib/supabase.js";
 import SignIn from "../screens/SignIn.jsx";
 import ResetPassword from "../screens/ResetPassword.jsx";
 
@@ -8,8 +10,12 @@ import ResetPassword from "../screens/ResetPassword.jsx";
  * where there are no accounts at all. Renders children(memberId), with a null
  * member in demo mode.
  *
- * Recovery comes before everything: a member who arrived on a reset link is
- * signed in, but sees only the form that sets a new password.
+ * The order matters. Demo mode is a deliberate choice and comes first. A build
+ * that is simply missing its variables is not demo mode and must never be
+ * mistaken for it, so it stops here and names what is absent — the app, and
+ * therefore the fixture profiles, are never reached. Recovery comes before the
+ * sign-in form: a member who arrived on a reset link is already signed in, but
+ * sees only the form that sets a new password.
  */
 export default function AuthGate({ children }) {
   const [member, setMember] = useState(currentMember);
@@ -21,22 +27,51 @@ export default function AuthGate({ children }) {
   }, []);
 
   if (DEMO) return children(null);
-  if (!supabase) return <NotConfigured />;
+  if (missingConfig.length || !supabase) return <NotConfigured missing={missingConfig} />;
   if (!member.ready) return <div className="ks flat" aria-busy="true" />;
   if (isRecovering()) return <ResetPassword />;
   if (!member.id) return <SignIn />;
   return children(member.id);
 }
 
-function NotConfigured() {
+/**
+ * The dead end for a misconfigured build. It deliberately offers nothing to
+ * click: there is no feed to fall back to and no account to make, and saying so
+ * plainly is more use than a half-working app.
+ */
+function NotConfigured({ missing = [] }) {
   return (
     <div className="ks flat">
       <h1 className="ks-mark">Kindred Spirits</h1>
-      <div className="callout">
-        <b>This build has no backend configured.</b> Set VITE_SUPABASE_URL and
-        VITE_SUPABASE_PUBLISHABLE_KEY as in .env.example, or set
-        VITE_DEMO_MODE=true for the seeded review build.
+      <p className="ks-sub">This app is not configured.</p>
+
+      <div className="callout" style={{ marginBottom: 16 }}>
+        {missing.length > 0 ? (
+          <>
+            <b>
+              {missing.length > 1 ? "These variables are" : "This variable is"} missing
+              from this build:
+            </b>
+            <ul style={{ margin: "9px 0 0", paddingLeft: 20 }}>
+              {missing.map((name) => <li key={name}><code>{name}</code></li>)}
+            </ul>
+          </>
+        ) : (
+          <b>The Supabase client could not be created.</b>
+        )}
       </div>
+
+      <p className="ks-note">
+        This is <b>not</b> the demo build. Nothing is shown here on purpose —
+        without a backend there are no members to read, and the seeded profiles
+        are only ever used when demo mode is asked for by name.
+      </p>
+      <p className="ks-note">
+        Set the variables as in <code>.env.example</code> and build again. On
+        Vercel they have to be set for both Production and Preview, and a change
+        to them needs a redeploy with the build cache turned off. To run the
+        seeded review build instead, set <code>VITE_DEMO_MODE=true</code>.
+      </p>
     </div>
   );
 }

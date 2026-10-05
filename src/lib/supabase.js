@@ -3,8 +3,20 @@
  *
  * Reads VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY. The publishable
  * key is meant to ship in the bundle: everything it can reach is limited by
- * RLS. With VITE_DEMO_MODE=true there is no client at all, and the app runs on
- * the seeded fixtures with no accounts.
+ * RLS.
+ *
+ * There are exactly two legitimate states, and a third that is a mistake:
+ *
+ *   VITE_DEMO_MODE=true     no client, no accounts, the seeded fixtures. A
+ *                           deliberate choice for a client review.
+ *   the two vars set        the real app, behind an auth gate.
+ *   a var missing           NOT demo mode. `missingConfig` names what is
+ *                           absent, AuthGate refuses to render the app, and
+ *                           the build fails outright — see vite.config.js.
+ *
+ * That third case used to produce a null client exactly like demo mode does,
+ * so a deploy with no env vars quietly served fixture profiles with no sign-in
+ * anywhere. A missing variable must never look like demo mode.
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -13,10 +25,40 @@ const env = import.meta.env ?? {};
 
 export const DEMO = env.VITE_DEMO_MODE === "true";
 
-const url = env.VITE_SUPABASE_URL;
-const key = env.VITE_SUPABASE_PUBLISHABLE_KEY;
+// A copied .env.example counts as unset: it would otherwise build a client
+// pointed at a project that does not exist, which fails later and further away.
+const PLACEHOLDER = /your-project-ref|replace_me/i;
+const unset = (v) => !v || !String(v).trim() || PLACEHOLDER.test(String(v));
 
-export const supabase = !DEMO && url && key ? createClient(url, key) : null;
+const REQUIRED = {
+  VITE_SUPABASE_URL: env.VITE_SUPABASE_URL,
+  VITE_SUPABASE_PUBLISHABLE_KEY: env.VITE_SUPABASE_PUBLISHABLE_KEY,
+};
+
+/**
+ * The required variables that are missing, when this build is meant to be the
+ * real app. Always empty in demo mode, which has no backend on purpose.
+ */
+export const missingConfig = DEMO
+  ? []
+  : Object.entries(REQUIRED).filter(([, v]) => unset(v)).map(([name]) => name);
+
+export const configured = DEMO || missingConfig.length === 0;
+
+export const supabase = configured && !DEMO
+  ? createClient(REQUIRED.VITE_SUPABASE_URL, REQUIRED.VITE_SUPABASE_PUBLISHABLE_KEY)
+  : null;
+
+if (missingConfig.length) {
+  // Say it where anyone who opens the console will see it, naming the variable
+  // rather than the symptom.
+  console.error(
+    `[Kindred Spirits] Not configured: missing ${missingConfig.join(" and ")}. `
+    + "This is not demo mode — no profiles will be shown. Set the variable(s) "
+    + "for this environment and redeploy without the build cache, or set "
+    + "VITE_DEMO_MODE=true to run the seeded review build on purpose.",
+  );
+}
 
 // Who is signed in. `ready` turns true once the stored session has been read.
 let member = { ready: !supabase, id: null };
