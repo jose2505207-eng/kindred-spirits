@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <!-- Reachable without an account, as the stores require, but still not
+         indexed: the rest of this deployment is a confidential prototype. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>Deleting your Kindred Spirits account</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600;6..96,800&family=Inter:wght@400;500;600&display=swap" />
+    <link rel="icon" href="/icon-192.png" />
+
+    <style>
+      /* The tokens from src/theme.js. This page is outside the app bundle, so
+         it carries its own copy rather than importing the stylesheet. */
+      :root {
+        --felt: #0E241C; --felt-2: #081713; --felt-3: #16342A;
+        --ivory: #F3EEE2; --brass: #C6A03C; --mute: #87A196;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; background: var(--felt); color: var(--ivory); }
+      body {
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+        -webkit-text-size-adjust: 100%;
+      }
+      main {
+        max-width: 520px; margin: 0 auto;
+        padding: calc(28px + env(safe-area-inset-top)) 16px
+                 calc(40px + env(safe-area-inset-bottom));
+      }
+      h1 {
+        font-family: 'Bodoni Moda', Georgia, serif; font-size: 26px; font-weight: 800;
+        letter-spacing: -.01em; line-height: 1.15; margin: 0 0 6px;
+      }
+      .sub { color: var(--mute); font-size: 13px; line-height: 1.55; margin: 0 0 26px; }
+      h2 {
+        font-family: 'Bodoni Moda', Georgia, serif; font-size: 19px; font-weight: 600;
+        margin: 0 0 10px;
+      }
+      p, li { font-size: 14px; line-height: 1.65; }
+      p { margin: 0 0 13px; }
+      ol, ul { margin: 0 0 13px; padding-left: 22px; }
+      li { margin-bottom: 7px; }
+      hr { border: 0; border-top: 1px solid var(--felt-3); margin: 30px 0 22px; }
+      a { color: var(--brass); }
+      .callout {
+        border: 1px dashed var(--felt-3); border-radius: 4px; padding: 13px 15px;
+        background: var(--felt-2); color: var(--mute); font-size: 13px; line-height: 1.6;
+      }
+      .callout b { color: var(--ivory); font-weight: 600; }
+      .steps { border-left: 3px solid var(--brass); padding-left: 18px; margin-left: 2px; }
+      table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 0 0 13px; }
+      th, td { text-align: left; padding: 9px 0; border-bottom: 1px solid var(--felt-3);
+               vertical-align: top; line-height: 1.55; }
+      th { color: var(--mute); font-weight: 400; width: 45%; }
+      td:last-child { color: var(--ivory); }
+      footer { color: var(--mute); font-size: 12.5px; line-height: 1.6; margin-top: 30px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Deleting your account</h1>
+      <p class="sub">
+        Kindred Spirits · how to delete your account and what happens to your
+        data when you do.
+      </p>
+
+      <h2>In the app</h2>
+      <div class="steps">
+        <ol>
+          <li>Open Kindred Spirits and sign in.</li>
+          <li>Go to the <b>About you</b> tab.</li>
+          <li>Scroll to the bottom and choose <b>Delete account</b>.</li>
+          <li>Confirm. The account and its data go immediately.</li>
+        </ol>
+      </div>
+      <p>
+        There is no waiting period and no reactivation. Signing up again with the
+        same email address creates a new, empty account.
+      </p>
+
+      <hr />
+
+      <h2>Without the app</h2>
+      <p>
+        If you cannot sign in — a lost password, a lost device, or an uninstalled
+        app — email us from the address on the account and ask for it to be
+        deleted. Say that you want the account deleted; you do not need to give
+        a reason.
+      </p>
+      <p>
+        <a href="mailto:privacy@kindred-spirits.example?subject=Delete%20my%20account">privacy@kindred-spirits.example</a>
+      </p>
+      <p>
+        We answer within 30 days and normally much sooner. We may have to ask
+        you to confirm from the account's own email address, so that nobody can
+        delete somebody else's account.
+      </p>
+
+      <div class="callout">
+        <b>Before this page goes live.</b> The address above is a placeholder on
+        the reserved <code>.example</code> domain and does not receive mail. It
+        has to be replaced with a real, monitored mailbox before the app is
+        submitted to either store.
+      </div>
+
+      <hr />
+
+      <h2>What is deleted</h2>
+      <table>
+        <tbody>
+          <tr><th>Your account and sign-in</th><td>Deleted</td></tr>
+          <tr><th>Name, birthdate, bio, visibility</th><td>Deleted</td></tr>
+          <tr><th>Photos and your bowtie image</th><td>Deleted from storage</td></tr>
+          <tr><th>Connections and matches</th><td>Deleted</td></tr>
+          <tr><th>Messages you sent, and your conversations</th><td>Deleted</td></tr>
+          <tr><th>Blocks you made</th><td>Deleted</td></tr>
+          <tr><th>Reports you filed</th><td>Deleted</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Your reading is never stored, so there is nothing to delete: cards are
+        worked out from your birthdate on your own device each time, and the
+        birthdate goes with the account.
+      </p>
+
+      <h2>What is kept</h2>
+      <p>
+        If somebody reported your account, the report itself is kept so that
+        moderators can still see a pattern of behaviour — but it is stripped of
+        anything identifying you. What remains is the reason the reporter wrote,
+        the date, and any note a moderator added. Your identifier is removed
+        from it.
+      </p>
+      <p>
+        Ordinary server logs may hold request records for a short period as part
+        of running the service. They are not used to rebuild a deleted account.
+      </p>
+
+      <footer>
+        This page is for the Kindred Spirits mobile and web app. It is reachable
+        without an account on purpose, so that anybody can find out how to
+        delete theirs.
+      </footer>
+    </main>
+  </body>
+</html>

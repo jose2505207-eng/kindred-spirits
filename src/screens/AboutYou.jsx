@@ -12,6 +12,7 @@ import { JOKER } from "../../engine/kindredEngine.js";
  */
 export default function AboutYou({
   fc, name, business, bowtie, onEditBowtie, memberId = null, onSignOut,
+  onDeleteAccount,
 }) {
   const [which, setWhich] = useState("spiritual");
   const joker = fc.birthCard === JOKER;
@@ -112,6 +113,62 @@ export default function AboutYou({
           <button className="ks-ghost" onClick={onSignOut}>Sign out</button>
         </>
       )}
+
+      {onDeleteAccount && <DeleteAccount onDelete={onDeleteAccount} />}
     </div>
+  );
+}
+
+/**
+ * Deleting the account. Two steps on purpose: the first press only says what
+ * will happen. The Edge Function empties Storage before it removes the
+ * account, so nothing is left behind to tidy up.
+ */
+function DeleteAccount({ onDelete }) {
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState(null);
+
+  const run = async () => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      await onDelete();
+    } catch (e) {
+      setProblem(e.message);
+      setBusy(false);
+    }
+  };
+
+  return (
+    <>
+      <hr className="ks-rule" />
+      {confirming ? (
+        <>
+          <h2 className="ks-h">Delete your account</h2>
+          <p className="ks-note">
+            Your profile, your photos, your connections and every conversation
+            you are in go immediately, and cannot be brought back. If somebody
+            has reported you, the report is kept without anything that
+            identifies you.
+          </p>
+          <div className="actions">
+            <button className="ks-ghost" disabled={busy}
+              onClick={() => { setConfirming(false); setProblem(null); }}>
+              Keep my account
+            </button>
+            <button className="ks-go" disabled={busy} onClick={run}>
+              {busy ? "Deleting…" : "Delete for good"}
+            </button>
+          </div>
+        </>
+      ) : (
+        <button type="button" className="linkish danger"
+          onClick={() => setConfirming(true)}>
+          Delete account
+        </button>
+      )}
+      {problem && <p className="problem" role="alert">{problem}</p>}
+    </>
   );
 }

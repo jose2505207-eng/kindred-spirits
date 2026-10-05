@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/delete-account", "destination": "/delete-account.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

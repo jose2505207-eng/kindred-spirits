@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { rank } from "./lib/ranking.js";
 import { readingFor } from "./lib/reading.js";
-import { DEMO, signOut } from "./lib/supabase.js";
+import { DEMO, deleteAccount, signOut } from "./lib/supabase.js";
 import {
   block, connect, loadCandidates, loadConnected, loadMe, report, saveBowtie,
   saveOnboarding, watchConnections,
@@ -194,7 +194,8 @@ export default function App({ memberId }) {
               : <AboutYou fc={fc} name={me.name} business={business}
                   bowtie={me.bowtie} onEditBowtie={() => setEditingBowtie(true)}
                   memberId={DEMO ? null : memberId}
-                  onSignOut={DEMO ? undefined : signOut} />}
+                  onSignOut={DEMO ? undefined : signOut}
+                  onDeleteAccount={DEMO ? undefined : deleteAccount} />}
 
       {!open && <Tabs tab={tab} setTab={setTab} />}
 
