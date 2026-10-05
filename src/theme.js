@@ -284,6 +284,7 @@ button.tile:active{background:var(--felt-3)}
 .photo-actions{display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center}
 .photo-actions .linkish{padding:0}
 .photo-actions .danger{color:#E58A8A}
+.linkish.danger{color:#E58A8A}
 .photo-flag{font-size:13px; color:var(--brass)}
 .photo-strip{list-style:none; margin:0 -16px 18px; padding:0 16px; display:flex; gap:8px;
   overflow-x:auto; scroll-snap-type:x mandatory}
@@ -326,6 +327,20 @@ button.tile:active{background:var(--felt-3)}
   font-size:16px; background:var(--felt); color:var(--ivory); border:1px solid var(--felt-3)}
 .composer input:focus{outline:2px solid var(--brass); outline-offset:1px}
 .composer .ks-go{width:auto; padding:0 18px}
+
+/* ---------- moderation ---------- */
+.report{border:1px solid var(--felt-3); border-radius:4px; background:var(--felt-2);
+  padding:13px 14px; margin-bottom:10px}
+.report header b{display:block; font-size:14.5px; font-weight:600; line-height:1.3}
+.report header span{display:block; font-size:12.5px; color:var(--mute); margin:3px 0 10px}
+.report .why{font-size:13.5px; line-height:1.55; margin:0 0 12px;
+  white-space:pre-wrap; overflow-wrap:anywhere}
+.report .flag{font-style:normal; font-size:11px; font-weight:600; color:var(--red);
+  border:1px solid var(--red); border-radius:999px; padding:1px 7px; margin-left:8px;
+  vertical-align:middle}
+.report .ks-field{margin-bottom:10px}
+.report-actions{display:flex; flex-wrap:wrap; gap:4px 18px; align-items:center}
+.report-actions .linkish{padding:0}
 
 /* ---------- dev-only toggle for the client's open question ---------- */
 .devbar{position:fixed; z-index:30; left:0; right:0;

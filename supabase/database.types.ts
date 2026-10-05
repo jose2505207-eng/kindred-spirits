@@ -1,7 +1,3 @@
-// GENERATED from project ofmlahcfcuhwykgzupey with Supabase's
-// generate_typescript_types. Documentation of the schema only: this app is
-// JavaScript and nothing imports this file. Regenerate after a migration.
-
 export type Json =
   | string
   | number
@@ -249,6 +245,36 @@ export type Database = {
           },
         ]
       }
+      moderators: {
+        Row: {
+          created_at: string
+          profile_id: string
+        }
+        Insert: {
+          created_at?: string
+          profile_id: string
+        }
+        Update: {
+          created_at?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderators_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderators_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_photos: {
         Row: {
           caption: string | null
@@ -311,6 +337,8 @@ export type Database = {
           id: string
           is_visible: boolean
           onboarded_at: string | null
+          suspended_at: string | null
+          suspended_reason: string | null
           updated_at: string
         }
         Insert: {
@@ -326,6 +354,8 @@ export type Database = {
           id: string
           is_visible?: boolean
           onboarded_at?: string | null
+          suspended_at?: string | null
+          suspended_reason?: string | null
           updated_at?: string
         }
         Update: {
@@ -341,34 +371,51 @@ export type Database = {
           id?: string
           is_visible?: boolean
           onboarded_at?: string | null
+          suspended_at?: string | null
+          suspended_reason?: string | null
           updated_at?: string
         }
         Relationships: []
       }
       reports: {
         Row: {
+          action_note: string | null
           created_at: string
           id: string
           message_id: string | null
           reason: string
-          reported_id: string
+          reported_deleted_at: string | null
+          reported_id: string | null
           reporter_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["report_status"]
         }
         Insert: {
+          action_note?: string | null
           created_at?: string
           id?: string
           message_id?: string | null
           reason: string
-          reported_id: string
+          reported_deleted_at?: string | null
+          reported_id?: string | null
           reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
         }
         Update: {
+          action_note?: string | null
           created_at?: string
           id?: string
           message_id?: string | null
           reason?: string
-          reported_id?: string
+          reported_deleted_at?: string | null
+          reported_id?: string | null
           reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
         }
         Relationships: [
           {
@@ -402,6 +449,20 @@ export type Database = {
           {
             foreignKeyName: "reports_reporter_id_fkey"
             columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
             referencedRelation: "public_profiles"
             referencedColumns: ["id"]
@@ -483,6 +544,32 @@ export type Database = {
       }
     }
     Functions: {
+      set_profile_suspended: {
+        Args: { target: string; reason?: string; suspended?: boolean }
+        Returns: {
+          bio: string | null
+          birthdate: string | null
+          bowtie_backdrop: string
+          bowtie_caption: string
+          bowtie_emoji: string
+          bowtie_image_path: string | null
+          business: boolean
+          created_at: string
+          display_name: string
+          id: string
+          is_visible: boolean
+          onboarded_at: string | null
+          suspended_at: string | null
+          suspended_reason: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       start_conversation: {
         Args: { other: string }
         Returns: {
@@ -500,7 +587,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      report_status: "open" | "actioned" | "dismissed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -627,6 +714,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      report_status: ["open", "actioned", "dismissed"],
+    },
   },
 } as const

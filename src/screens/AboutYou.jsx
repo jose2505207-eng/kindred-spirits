@@ -12,7 +12,7 @@ import { JOKER } from "../../engine/kindredEngine.js";
  */
 export default function AboutYou({
   fc, name, business, bowtie, onEditBowtie, memberId = null, onSignOut,
-  onDeleteAccount,
+  onDeleteAccount, onModerate,
 }) {
   const [which, setWhich] = useState("spiritual");
   const joker = fc.birthCard === JOKER;
@@ -106,6 +106,18 @@ export default function AboutYou({
 
       <hr className="ks-rule" />
       <BookReading name={name} />
+
+      {onModerate && (
+        <>
+          <hr className="ks-rule" />
+          <h2 className="ks-h">Moderation</h2>
+          <p className="ks-note">
+            You are a moderator, so you can read what members have reported and
+            suspend an account.
+          </p>
+          <button className="ks-ghost" onClick={onModerate}>Open moderation</button>
+        </>
+      )}
 
       {onSignOut && (
         <>

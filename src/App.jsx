@@ -7,6 +7,7 @@ import {
   saveOnboarding, watchConnections,
 } from "./lib/people.js";
 import { ME, personId, startConversation } from "./lib/messaging.js";
+import { amIModerator } from "./lib/moderation.js";
 
 import Onboarding from "./screens/Onboarding.jsx";
 import Reveal from "./screens/Reveal.jsx";
@@ -17,6 +18,7 @@ import Messages from "./screens/Messages.jsx";
 import Thread from "./screens/Thread.jsx";
 import Community from "./screens/Community.jsx";
 import BowtieEditor from "./screens/BowtieEditor.jsx";
+import Moderation from "./screens/Moderation.jsx";
 import Tabs, { TAB_LABEL } from "./components/Tabs.jsx";
 
 /**
@@ -34,6 +36,8 @@ export default function App({ memberId }) {
   const [openId, setOpenId] = useState(null);
   const [thread, setThread] = useState(null);      // { id, conversationId }
   const [editingBowtie, setEditingBowtie] = useState(false);
+  const [moderator, setModerator] = useState(false);
+  const [moderating, setModerating] = useState(false);
   const [candidates, setCandidates] = useState([]);
   const [connected, setConnected] = useState(() => new Set());
   const [problem, setProblem] = useState(null);
@@ -53,6 +57,16 @@ export default function App({ memberId }) {
         setStage(profile?.onboardedAt ? "app" : "onboarding");
       })
       .catch((e) => { if (live) setProblem(e.message); });
+    return () => { live = false; };
+  }, [memberId]);
+
+  // Whether this member moderates. The moderators policy only ever returns
+  // your own row, so this is the one thing it can answer — and the way in is
+  // hidden rather than guarded, because the database refuses the reads and the
+  // suspensions anyway.
+  useEffect(() => {
+    let live = true;
+    amIModerator(memberId).then((is) => { if (live) setModerator(is); });
     return () => { live = false; };
   }, [memberId]);
 
@@ -121,6 +135,14 @@ export default function App({ memberId }) {
 
   if (me === undefined) {
     return problem ? <Trouble message={problem} /> : <div className="ks flat" aria-busy="true" />;
+  }
+
+  if (me?.suspendedAt) {
+    return <Suspended reason={me.suspendedReason} onSignOut={DEMO ? undefined : signOut} />;
+  }
+
+  if (moderating) {
+    return <Moderation memberId={memberId} onBack={() => setModerating(false)} />;
   }
 
   if (stage === "onboarding") {
@@ -195,7 +217,8 @@ export default function App({ memberId }) {
                   bowtie={me.bowtie} onEditBowtie={() => setEditingBowtie(true)}
                   memberId={DEMO ? null : memberId}
                   onSignOut={DEMO ? undefined : signOut}
-                  onDeleteAccount={DEMO ? undefined : deleteAccount} />}
+                  onDeleteAccount={DEMO ? undefined : deleteAccount}
+                  onModerate={moderator ? () => setModerating(true) : undefined} />}
 
       {!open && <Tabs tab={tab} setTab={setTab} />}
 
@@ -222,6 +245,26 @@ function Trouble({ message }) {
         <button className="ks-ghost" onClick={() => window.location.reload()}>Try again</button>
         {!DEMO && <button className="ks-ghost" onClick={signOut}>Sign out</button>}
       </div>
+    </div>
+  );
+}
+
+/**
+ * What a suspended member sees instead of the app. The database has already
+ * taken them out of every feed and refuses their messages, so this only has to
+ * tell them why.
+ */
+function Suspended({ reason, onSignOut }) {
+  return (
+    <div className="ks flat">
+      <h1 className="ks-mark">Kindred Spirits</h1>
+      <div className="callout" style={{ marginBottom: 16 }}>
+        <b>Your account is suspended.</b>{" "}
+        {reason || "Somebody who looks after Kindred Spirits has paused it."}{" "}
+        While it is paused you will not appear in anyone's matches, and you
+        cannot send messages.
+      </div>
+      {onSignOut && <button className="ks-ghost" onClick={onSignOut}>Sign out</button>}
     </div>
   );
 }

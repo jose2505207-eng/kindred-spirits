@@ -16,7 +16,8 @@ import { dataUrlToBlob, PHOTO_BUCKET, signedUrls } from "./photos.js";
 import { readProfiles } from "../fixtures/profiles.js";
 
 const PROFILE_COLUMNS = "id, display_name, birthdate, business, bio, is_visible, onboarded_at, "
-  + "bowtie_emoji, bowtie_image_path, bowtie_backdrop, bowtie_caption";
+  + "bowtie_emoji, bowtie_image_path, bowtie_backdrop, bowtie_caption, "
+  + "suspended_at, suspended_reason";
 
 const fail = (error) => { if (error) throw new Error(error.message); };
 const ALREADY_EXISTS = "23505";
@@ -44,6 +45,10 @@ async function toMe(row) {
     business: row.business,
     visible: row.is_visible,
     onboardedAt: row.onboarded_at,
+    // A suspended member still reads their own row, which is how the app can
+    // tell them why nothing works. See the report moderation migration.
+    suspendedAt: row.suspended_at ?? null,
+    suspendedReason: row.suspended_reason ?? null,
   };
 }
 
