@@ -76,7 +76,67 @@ npm run test:py       # Python reference self-test
 ```
 
 The engine tests need no dependencies; the app needs `@supabase/supabase-js`.
-Never put a secret key in a `VITE_` variable — Vite bundles all of them.
+
+### The three variables
+
+| Variable | What it is for |
+|---|---|
+| `VITE_SUPABASE_URL` | The project's API URL. Required unless demo mode. |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | The publishable key, which is meant to ship in the bundle — RLS limits everything it can reach. Required unless demo mode. |
+| `VITE_DEMO_MODE` | `true` builds the seeded client-review build: no accounts, fixture profiles, in-memory messages. Anything else means the real backend. |
+
+Never put a secret key in a `VITE_` variable — Vite bundles all of them. The
+publishable key is the only Supabase key that belongs in this app; the service
+role key belongs only in the Edge Function, where Supabase injects it.
+
+**`npm run build` fails** when `VITE_DEMO_MODE` is not `true` and either
+Supabase variable is missing, and names the ones that are absent. That is
+deliberate: a build with no variables used to succeed and then serve fixture
+profiles with no sign-in anywhere, which is indistinguishable from a demo build
+by looking at it. A copied `.env.example` counts as missing, since
+`your-project-ref` would build a client aimed at nothing.
+
+If the app does run without them — it cannot, after that check, but if the
+check were removed — it shows an "App is not configured" screen naming the
+missing variables, and never falls back to the fixtures.
+
+## Deploy
+
+Vercel serves `dist/` as a static build. `npm run build` is the build command
+and needs nothing else.
+
+**Set all three variables for Production *and* Preview.** Vercel scopes
+environment variables per environment, so setting them for Production only
+leaves every preview deployment failing the build check above — which is the
+correct outcome, but a confusing one if you expected previews to work.
+
+**Changing a variable needs a redeploy with the build cache off.** `VITE_`
+variables are baked into the bundle at build time, so a cached build keeps the
+old values however the dashboard reads. In Vercel: Deployments → the latest one
+→ Redeploy, and clear "Use existing build cache".
+
+### Supabase redirect URLs
+
+Confirmation and password-reset links come back to `window.location.origin`, so
+every origin the app is served from has to be in the Supabase project's allowed
+redirect URLs, or the link will bounce. In the Supabase dashboard under
+**Authentication → URL Configuration**:
+
+- **Site URL** — `https://kindred-spirits-three.vercel.app`
+- **Redirect URLs** — one entry per origin, wildcards allowed:
+  - `https://kindred-spirits-three.vercel.app/**` — production
+  - `https://kindred-spirits-*-jose2505207-engs-projects.vercel.app/**` —
+    preview deployments. Note the shape: each preview is
+    `kindred-spirits-<build hash>-jose2505207-engs-projects.vercel.app`, so the
+    wildcard goes in the middle, not on the production alias.
+  - `http://localhost:5173/**` — `npm run dev`
+
+Add a custom domain later and it needs its own entry here too; Supabase
+matches these literally apart from the wildcards.
+
+Confirmation emails also go through Supabase's own rate-limited sender until a
+real SMTP sender is configured; `docs/DESIGN.md` tracks that under "Before real
+people use it".
 
 ## State
 
