@@ -1,7 +1,22 @@
 import React, { useState } from "react";
 import { DEMO } from "../lib/supabase.js";
+import { ageOn } from "../lib/reading.js";
 
-const TODAY = new Date().toISOString().slice(0, 10);
+/**
+ * 18+. The age-gate trigger in supabase/migrations refuses a younger birthdate
+ * whatever a client sends; this mirrors it so the form can say so before the
+ * server has to.
+ */
+export const MIN_AGE = 18;
+
+// The latest birthdate that is still 18 today, so the picker cannot offer a
+// date the database will refuse.
+const ADULT_MAX = (() => {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - MIN_AGE);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+})();
 
 /**
  * Name, birthdate, and the connection being read. Three fields and nothing
@@ -16,7 +31,8 @@ export default function Onboarding({ onSubmit }) {
   const [problem, setProblem] = useState(null);
 
   const parsed = parseDate(birthdate);
-  const ready = name.trim().length > 0 && parsed !== null;
+  const underage = parsed !== null && ageOn(birthdate) < MIN_AGE;
+  const ready = name.trim().length > 0 && parsed !== null && !underage;
 
   return (
     <div className="ks flat">
@@ -46,9 +62,14 @@ export default function Onboarding({ onSubmit }) {
 
         <label className="ks-field">
           <span>Your birthdate</span>
-          <input type="date" value={birthdate} max={TODAY} min="1920-01-01"
+          <input type="date" value={birthdate} max={ADULT_MAX} min="1920-01-01"
             onChange={(e) => setBirthdate(e.target.value)} />
         </label>
+        {underage && (
+          <p className="problem" role="alert">
+            Kindred Spirits is for people of 18 and over.
+          </p>
+        )}
 
         <div className="ks-seg" role="group" aria-label="What you are looking for">
           <button type="button" aria-pressed={!business} onClick={() => setBusiness(false)}>
