@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { DEMO, currentMember, onMemberChange, supabase } from "../lib/supabase.js";
+import { DEMO, currentMember, isRecovering, onMemberChange, supabase } from "../lib/supabase.js";
 import SignIn from "../screens/SignIn.jsx";
+import ResetPassword from "../screens/ResetPassword.jsx";
 
 /**
  * Nothing gets past this without a signed-in member, except in demo mode,
  * where there are no accounts at all. Renders children(memberId), with a null
  * member in demo mode.
+ *
+ * Recovery comes before everything: a member who arrived on a reset link is
+ * signed in, but sees only the form that sets a new password.
  */
 export default function AuthGate({ children }) {
   const [member, setMember] = useState(currentMember);
@@ -19,6 +23,7 @@ export default function AuthGate({ children }) {
   if (DEMO) return children(null);
   if (!supabase) return <NotConfigured />;
   if (!member.ready) return <div className="ks flat" aria-busy="true" />;
+  if (isRecovering()) return <ResetPassword />;
   if (!member.id) return <SignIn />;
   return children(member.id);
 }

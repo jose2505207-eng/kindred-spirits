@@ -22,12 +22,32 @@ export const supabase = !DEMO && url && key ? createClient(url, key) : null;
 let member = { ready: !supabase, id: null };
 const listeners = new Set();
 
+// A recovery link signs the member in and fires PASSWORD_RECOVERY. Until they
+// have actually chosen a new password, AuthGate shows nothing but that form:
+// otherwise a recovery link left in an inbox is a way into the account.
+let recovering = false;
+
+export const isRecovering = () => recovering;
+
+const announce = () => {
+  member = { ...member };
+  listeners.forEach((fn) => fn(member));
+};
+
 if (supabase) {
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
     const id = session?.user?.id ?? null;
-    if (member.ready && member.id === id) return;   // a token refresh, not a new member
+
+    if (event === "PASSWORD_RECOVERY") recovering = true;
+    else if (event === "SIGNED_OUT") recovering = false;
+
+    const changed = !member.ready || member.id !== id;
+    // A token refresh is not a new member, but entering recovery still has to
+    // reach AuthGate even though the member has not changed.
+    if (!changed && event !== "PASSWORD_RECOVERY") return;
+
     member = { ready: true, id };
-    listeners.forEach((fn) => fn(member));
+    announce();
   });
 }
 
@@ -41,6 +61,30 @@ export function onMemberChange(fn) {
 
 export async function signOut() {
   if (supabase) await supabase.auth.signOut();
+}
+
+/**
+ * Sends a password recovery email. The link returns to this app's own origin,
+ * which has to be in the project's allowed redirect URLs.
+ *
+ * The caller deliberately does not learn whether the address has an account:
+ * Supabase answers the same either way, and so does the screen.
+ */
+export async function requestPasswordReset(email) {
+  if (!supabase) throw new Error("This build has no backend configured.");
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo: window.location.origin,
+  });
+  if (error) throw new Error(error.message);
+}
+
+/** Sets a new password and leaves recovery, which lets the app open. */
+export async function setNewPassword(password) {
+  if (!supabase) throw new Error("This build has no backend configured.");
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw new Error(error.message);
+  recovering = false;
+  announce();
 }
 
 /**
