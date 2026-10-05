@@ -53,12 +53,15 @@ management library, a component library, or a test framework beyond
 
 ## Confidentiality
 
-This implements a confidential third-party patent disclosure. Keep the repo
-private. Do not publish the algorithm, the derivations, or the card tables
-anywhere public, and add `noindex` to any deployed build. That includes the
-backend: no card tables, derivations or engine logic in migrations, Edge
-Functions, seed files, or any public Storage object. The `cards` table holds
-card names and art paths only, never the engine's deck order or indices.
+This implements a third-party patent disclosure by Jack R. McKeown Sr. and
+Jack R. McKeown Jr. The GitHub repo is public by deliberate choice, so treat
+everything committed as published.
+
+The rest holds whatever the repo's visibility. Add `noindex` to any deployed
+build. That includes the backend: no card tables, derivations or engine logic
+in migrations, Edge Functions, seed files, or any public Storage object. The
+`cards` table holds card names and art paths only, never the engine's deck
+order or indices.
 
 ## Style
 
