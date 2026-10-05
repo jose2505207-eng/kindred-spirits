@@ -4,6 +4,7 @@ import Bowtie from "../components/Bowtie.jsx";
 import Spread, { SpreadLegend } from "../components/Spread.jsx";
 import { PhotoStrip } from "../components/Photos.jsx";
 import { cardsParagraph, lifePathParagraph, closingLine } from "../lib/copy.js";
+import { formatDistance } from "../lib/place.js";
 
 /**
  * Why these two are a strong couple: the specific cards that met, whether the
@@ -241,6 +242,15 @@ function Unlocked({ me, match, them, business, which, setWhich, hit }) {
         </div>
         <div><dt>Life path</dt><dd>{them.fc.lifePath}</dd></div>
         <div><dt>Age</dt><dd>{them.age}</dd></div>
+        {(them.placeLabel || them.distanceKm != null) && (
+          <div>
+            <dt>Where</dt>
+            <dd>
+              {[them.placeLabel, formatDistance(them.distanceKm)]
+                .filter(Boolean).join(" · ")}
+            </dd>
+          </div>
+        )}
       </dl>
     </>
   );

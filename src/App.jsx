@@ -4,7 +4,7 @@ import { readingFor } from "./lib/reading.js";
 import { DEMO, deleteAccount, signOut } from "./lib/supabase.js";
 import {
   block, connect, loadCandidates, loadConnected, loadMe, report, saveBowtie,
-  saveInterest, saveOnboarding, unmatch, watchConnections,
+  saveInterest, saveOnboarding, savePlace, unmatch, watchConnections,
 } from "./lib/people.js";
 import { ME, personId, startConversation } from "./lib/messaging.js";
 import { amIModerator } from "./lib/moderation.js";
@@ -238,6 +238,14 @@ export default function App({ memberId }) {
                   gender={me.gender} interestedIn={me.interestedIn}
                   onSaveInterest={async (next) => {
                     setMe(await saveInterest(memberId, next));
+                    await refresh();
+                  }}
+                  place={{
+                    placeLabel: me.placeLabel, lat: me.lat, lon: me.lon,
+                    radiusKm: me.radiusKm,
+                  }}
+                  onSavePlace={async (next) => {
+                    setMe(await savePlace(memberId, next));
                     await refresh();
                   }} />}
 

@@ -338,7 +338,11 @@ export type Database = {
           id: string
           interested_in: Database["public"]["Enums"]["gender_option"][]
           is_visible: boolean
+          lat: number | null
+          lon: number | null
           onboarded_at: string | null
+          place_label: string | null
+          radius_km: number | null
           suspended_at: string | null
           suspended_reason: string | null
           updated_at: string
@@ -357,7 +361,11 @@ export type Database = {
           id: string
           interested_in?: Database["public"]["Enums"]["gender_option"][]
           is_visible?: boolean
+          lat?: number | null
+          lon?: number | null
           onboarded_at?: string | null
+          place_label?: string | null
+          radius_km?: number | null
           suspended_at?: string | null
           suspended_reason?: string | null
           updated_at?: string
@@ -376,7 +384,11 @@ export type Database = {
           id?: string
           interested_in?: Database["public"]["Enums"]["gender_option"][]
           is_visible?: boolean
+          lat?: number | null
+          lon?: number | null
           onboarded_at?: string | null
+          place_label?: string | null
+          radius_km?: number | null
           suspended_at?: string | null
           suspended_reason?: string | null
           updated_at?: string
@@ -524,8 +536,10 @@ export type Database = {
           bowtie_emoji: string | null
           bowtie_image_path: string | null
           display_name: string | null
+          distance_km: number | null
           gender: Database["public"]["Enums"]["gender_option"] | null
           id: string | null
+          place_label: string | null
         }
         Relationships: []
       }
@@ -547,7 +561,11 @@ export type Database = {
           id: string
           interested_in: Database["public"]["Enums"]["gender_option"][]
           is_visible: boolean
+          lat: number | null
+          lon: number | null
           onboarded_at: string | null
+          place_label: string | null
+          radius_km: number | null
           suspended_at: string | null
           suspended_reason: string | null
           updated_at: string
@@ -574,6 +592,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      unmatch: { Args: { other: string }; Returns: undefined }
     }
     Enums: {
       gender_option: "woman" | "man" | "non_binary" | "prefer_not_to_say"

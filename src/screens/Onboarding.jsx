@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DEMO } from "../lib/supabase.js";
 import { ageOn } from "../lib/reading.js";
 import { DEFAULT_GENDER, GENDERS, SEEKING } from "../lib/gender.js";
+import { PLACE_LABEL_MAX, RADIUS_OPTIONS, findMe } from "../lib/place.js";
 
 /**
  * 18+. The age-gate trigger in supabase/migrations refuses a younger birthdate
@@ -30,11 +31,27 @@ export default function Onboarding({ onSubmit }) {
   const [business, setBusiness] = useState(false);
   const [gender, setGender] = useState(DEFAULT_GENDER);
   const [interestedIn, setInterestedIn] = useState([]);
+  const [coords, setCoords] = useState(null);          // { lat, lon }, rounded
+  const [placeLabel, setPlaceLabel] = useState("");
+  const [radiusKm, setRadiusKm] = useState(null);      // null is anywhere
+  const [locating, setLocating] = useState(false);
+  const [placeProblem, setPlaceProblem] = useState(null);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState(null);
 
   const toggleInterest = (id) => setInterestedIn((prev) =>
     prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+
+  const locate = async () => {
+    setLocating(true);
+    setPlaceProblem(null);
+    try {
+      setCoords(await findMe());
+    } catch (e) {
+      setPlaceProblem(e.message);
+    }
+    setLocating(false);
+  };
 
   const parsed = parseDate(birthdate);
   const underage = parsed !== null && ageOn(birthdate) < MIN_AGE;
@@ -54,7 +71,11 @@ export default function Onboarding({ onSubmit }) {
         setBusy(true);
         setProblem(null);
         try {
-          await onSubmit({ name: name.trim(), birthdate, business, gender, interestedIn });
+          await onSubmit({
+            name: name.trim(), birthdate, business, gender, interestedIn,
+            lat: coords?.lat ?? null, lon: coords?.lon ?? null,
+            radiusKm, placeLabel,
+          });
         } catch (err) {
           setProblem(err.message);
           setBusy(false);
@@ -104,6 +125,42 @@ export default function Onboarding({ onSubmit }) {
             interested in, who are interested in you.
           </p>
         </div>
+
+        <div className="ks-field">
+          <span>Where you are<em className="count">optional</em></span>
+          <p className="ks-note" style={{ margin: "0 0 9px" }}>
+            {coords
+              ? "Saved to about a kilometre, which is all that is ever stored. Nobody sees your coordinates — only the name below, and how far away you are."
+              : "Leave this and distance will not come into it: you will see people anywhere, and they will see you."}
+          </p>
+          <button type="button" className="ks-ghost" onClick={locate} disabled={locating}
+            style={{ marginBottom: 9 }}>
+            {locating ? "Finding you…" : coords ? "Update my location" : "Use my location"}
+          </button>
+          {placeProblem && <p className="problem" role="alert">{placeProblem}</p>}
+          <input value={placeLabel} maxLength={PLACE_LABEL_MAX}
+            onChange={(e) => setPlaceLabel(e.target.value)}
+            aria-label="The place name you want shown"
+            placeholder="The name you want shown, like Lisbon" />
+        </div>
+
+        {coords && (
+          <div className="ks-field">
+            <span>Look for people within</span>
+            <div className="choices" role="group" aria-label="How far to look">
+              {RADIUS_OPTIONS.map((o) => (
+                <button key={o.label} type="button" aria-pressed={radiusKm === o.km}
+                  onClick={() => setRadiusKm(o.km)}>
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <p className="ks-note" style={{ margin: 0 }}>
+              Whoever asks for less decides: if they are looking closer than
+              you are, neither of you appears to the other.
+            </p>
+          </div>
+        )}
 
         <div className="ks-seg" role="group" aria-label="What you are looking for">
           <button type="button" aria-pressed={!business} onClick={() => setBusiness(false)}>

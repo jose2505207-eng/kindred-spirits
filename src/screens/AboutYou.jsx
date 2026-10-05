@@ -6,6 +6,7 @@ import BookReading from "./BookReading.jsx";
 import { PhotoManager } from "../components/Photos.jsx";
 import { JOKER } from "../../engine/kindredEngine.js";
 import { GENDERS, SEEKING, genderLabel } from "../lib/gender.js";
+import { PLACE_LABEL_MAX, RADIUS_OPTIONS, findMe } from "../lib/place.js";
 
 /**
  * The user's own full reading. Opt-in, never forced: nothing routes here, the
@@ -15,6 +16,7 @@ export default function AboutYou({
   fc, name, business, bowtie, onEditBowtie, memberId = null, onSignOut,
   onDeleteAccount, onModerate,
   gender, interestedIn = [], onSaveInterest,
+  place, onSavePlace,
 }) {
   const [which, setWhich] = useState("spiritual");
   const joker = fc.birthCard === JOKER;
@@ -40,6 +42,13 @@ export default function AboutYou({
       {onSaveInterest && (
         <>
           <Interest gender={gender} interestedIn={interestedIn} onSave={onSaveInterest} />
+          <hr className="ks-rule" />
+        </>
+      )}
+
+      {onSavePlace && (
+        <>
+          <Place place={place} onSave={onSavePlace} />
           <hr className="ks-rule" />
         </>
       )}
@@ -225,6 +234,139 @@ function Interest({ gender, interestedIn, onSave }) {
           {busy ? "Saving…" : "Save"}
         </button>
       </div>
+      {problem && <p className="problem" role="alert">{problem}</p>}
+    </>
+  );
+}
+
+/**
+ * Where you are, and how far you will look.
+ *
+ * Coordinates are rounded to about a kilometre before they leave the device and
+ * the view never gives them to anybody — what other members get is the label
+ * written here and a distance. Forgetting a location is one press, and it
+ * reverts to the permissive default: distance stops mattering in either
+ * direction.
+ */
+function Place({ place, onSave }) {
+  const [editing, setEditing] = useState(false);
+  const [coords, setCoords] = useState(
+    place?.lat == null ? null : { lat: place.lat, lon: place.lon },
+  );
+  const [label, setLabel] = useState(place?.placeLabel ?? "");
+  const [radiusKm, setRadiusKm] = useState(place?.radiusKm ?? null);
+  const [locating, setLocating] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState(null);
+
+  const start = () => {
+    setCoords(place?.lat == null ? null : { lat: place.lat, lon: place.lon });
+    setLabel(place?.placeLabel ?? "");
+    setRadiusKm(place?.radiusKm ?? null);
+    setProblem(null);
+    setEditing(true);
+  };
+
+  const locate = async () => {
+    setLocating(true);
+    setProblem(null);
+    try {
+      setCoords(await findMe());
+    } catch (e) {
+      setProblem(e.message);
+    }
+    setLocating(false);
+  };
+
+  const save = async (next) => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      await onSave(next);
+      setEditing(false);
+    } catch (e) {
+      setProblem(e.message);
+    }
+    setBusy(false);
+  };
+
+  const radiusLabel = RADIUS_OPTIONS.find((o) => o.km === (place?.radiusKm ?? null))?.label
+    ?? "Anywhere";
+
+  if (!editing) {
+    return (
+      <>
+        <h2 className="ks-h">Where you are</h2>
+        <p className="ks-note">
+          {place?.lat == null
+            ? "Not set, so distance does not come into it: you see people anywhere, and they see you."
+            : `${place.placeLabel || "Set, with no name shown"} · looking ${radiusLabel.toLowerCase()}.`}
+        </p>
+        <button className="ks-ghost" onClick={start}>Change this</button>
+        {problem && <p className="problem" role="alert">{problem}</p>}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <h2 className="ks-h">Where you are</h2>
+
+      <div className="ks-field">
+        <span>Your location<em className="count">about a kilometre</em></span>
+        <p className="ks-note" style={{ margin: "0 0 9px" }}>
+          {coords
+            ? "Nobody is given your coordinates — only the name below, and how far away you are."
+            : "Not set. Distance will not hide anyone from you, or you from them."}
+        </p>
+        <button type="button" className="ks-ghost" onClick={locate} disabled={locating || busy}
+          style={{ marginBottom: 9 }}>
+          {locating ? "Finding you…" : coords ? "Update my location" : "Use my location"}
+        </button>
+        <input value={label} maxLength={PLACE_LABEL_MAX}
+          onChange={(e) => setLabel(e.target.value)}
+          aria-label="The place name you want shown"
+          placeholder="The name you want shown, like Lisbon" />
+      </div>
+
+      {coords && (
+        <div className="ks-field">
+          <span>Look for people within</span>
+          <div className="choices" role="group" aria-label="How far to look">
+            {RADIUS_OPTIONS.map((o) => (
+              <button key={o.label} type="button" aria-pressed={radiusKm === o.km}
+                onClick={() => setRadiusKm(o.km)}>
+                {o.label}
+              </button>
+            ))}
+          </div>
+          <p className="ks-note" style={{ margin: 0 }}>
+            Whoever asks for less decides: if they are looking closer than you
+            are, neither of you appears to the other.
+          </p>
+        </div>
+      )}
+
+      <div className="actions">
+        <button className="ks-ghost" disabled={busy} onClick={() => setEditing(false)}>
+          Cancel
+        </button>
+        <button className="ks-go" disabled={busy}
+          onClick={() => save({
+            lat: coords?.lat ?? null, lon: coords?.lon ?? null,
+            radiusKm: coords ? radiusKm : null, placeLabel: label,
+          })}>
+          {busy ? "Saving…" : "Save"}
+        </button>
+      </div>
+
+      {place?.lat != null && (
+        <button type="button" className="linkish danger" disabled={busy}
+          onClick={() => save({ lat: null, lon: null, radiusKm: null, placeLabel: "" })}>
+          Forget my location
+        </button>
+      )}
+
       {problem && <p className="problem" role="alert">{problem}</p>}
     </>
   );

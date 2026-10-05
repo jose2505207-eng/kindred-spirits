@@ -2,6 +2,7 @@ import React from "react";
 import Card from "../components/Card.jsx";
 import Bowtie from "../components/Bowtie.jsx";
 import { reasonFor } from "../lib/copy.js";
+import { formatDistance } from "../lib/place.js";
 import { JOKER } from "../../engine/kindredEngine.js";
 
 const GROUPS = [
@@ -84,6 +85,7 @@ function JokerNotice() {
 
 function Row({ r, me, reveal, onOpen }) {
   const p = r.profile;
+  const near = [p.placeLabel, formatDistance(p.distanceKm)].filter(Boolean).join(" · ");
   return (
     <li>
       <button className={`row${reveal ? ` t${r.tier}` : ""}`}
@@ -95,7 +97,9 @@ function Row({ r, me, reveal, onOpen }) {
             {reveal && <span className="tierdot" aria-hidden="true" />}
             {p.name} <em>{p.age}</em>
           </span>
-          <span className="cardname">{p.fc.birthCard}</span>
+          <span className="cardname">
+            {p.fc.birthCard}{near ? ` · ${near}` : ""}
+          </span>
           <span className="why">{reveal ? reasonFor(r, me, p.fc) : p.bio}</span>
         </span>
         <span className="chev" aria-hidden="true">›</span>

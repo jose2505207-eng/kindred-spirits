@@ -126,6 +126,23 @@ const GENDER = {
   "Juno Nakamura": "non_binary",
 };
 
+/**
+ * Places, assigned by position rather than authored one by one: demo mode only
+ * needs a genuine spread of distances for the radius filter to do something
+ * visible. Every fixture looks anywhere, so — as with gender — the filter is
+ * driven entirely by the viewer's own answer. See src/lib/place.js.
+ */
+const CITIES = [
+  { placeLabel: "Lisbon", lat: 38.72, lon: -9.14 },
+  { placeLabel: "Porto", lat: 41.15, lon: -8.61 },
+  { placeLabel: "Madrid", lat: 40.42, lon: -3.70 },
+  { placeLabel: "Seville", lat: 37.39, lon: -5.98 },
+  { placeLabel: "Bordeaux", lat: 44.84, lon: -0.58 },
+  { placeLabel: "Lyon", lat: 45.76, lon: 4.84 },
+  { placeLabel: "Barcelona", lat: 41.39, lon: 2.17 },
+  { placeLabel: "Marseille", lat: 43.30, lon: 5.37 },
+];
+
 /** The profiles with a reading attached, for the connection being read. */
 export function readProfiles(business) {
   return PROFILES.map((p, i) => withReading({
@@ -133,5 +150,7 @@ export function readProfiles(business) {
     id: i,
     gender: GENDER[p.name] ?? "prefer_not_to_say",
     interestedIn: [],
+    ...CITIES[i % CITIES.length],
+    radiusKm: null,
   }, business));
 }

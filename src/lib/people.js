@@ -13,12 +13,14 @@ import { DEMO, supabase } from "./supabase.js";
 import { withReading } from "./reading.js";
 import { DEFAULT_BOWTIE } from "./bowtie.js";
 import { DEFAULT_GENDER, mutuallyInterested } from "./gender.js";
+import { withinRadius } from "./place.js";
 import { dataUrlToBlob, PHOTO_BUCKET, signedUrls } from "./photos.js";
 import { readProfiles } from "../fixtures/profiles.js";
 
 const PROFILE_COLUMNS = "id, display_name, birthdate, business, bio, is_visible, onboarded_at, "
   + "bowtie_emoji, bowtie_image_path, bowtie_backdrop, bowtie_caption, "
-  + "suspended_at, suspended_reason, gender, interested_in";
+  + "suspended_at, suspended_reason, gender, interested_in, "
+  + "lat, lon, radius_km, place_label";
 
 const fail = (error) => { if (error) throw new Error(error.message); };
 const ALREADY_EXISTS = "23505";
@@ -30,6 +32,10 @@ function toPerson(row, urls) {
     birthdate: row.birthdate,
     bio: row.bio ?? "",
     gender: row.gender ?? DEFAULT_GENDER,
+    // What the view gives about where somebody is: a label they wrote and a
+    // distance worked out for this viewer. Never their coordinates.
+    placeLabel: row.place_label ?? null,
+    distanceKm: row.distance_km ?? null,
     bowtie: {
       emoji: row.bowtie_emoji,
       image: urls.get(row.bowtie_image_path) ?? null,
@@ -54,6 +60,10 @@ async function toMe(row) {
     // Only ever your own: public_profiles does not expose interested_in,
     // because who somebody is looking for is nobody else's business.
     interestedIn: row.interested_in ?? [],
+    // Your own coordinates, which only ever come from your own row.
+    lat: row.lat ?? null,
+    lon: row.lon ?? null,
+    radiusKm: row.radius_km ?? null,
   };
 }
 
@@ -73,13 +83,21 @@ export async function loadMe(memberId) {
 
 /** The onboarding fields, which make the profile visible to others. */
 export async function saveOnboarding(
-  memberId, { name, birthdate, business, gender, interestedIn },
+  memberId,
+  { name, birthdate, business, gender, interestedIn, lat, lon, radiusKm, placeLabel },
 ) {
   const onboardedAt = new Date().toISOString();
+  const place = {
+    lat: lat ?? null,
+    lon: lon ?? null,
+    radiusKm: radiusKm ?? null,
+    placeLabel: placeLabel?.trim() || null,
+  };
   if (DEMO) {
     demoMe = {
       id: "me", name, birthdate, business, bio: "", visible: true, onboardedAt,
       gender: gender ?? DEFAULT_GENDER, interestedIn: interestedIn ?? [],
+      ...place,
       bowtie: { ...DEFAULT_BOWTIE, imagePath: null },
     };
     return demoMe;
@@ -88,6 +106,33 @@ export async function saveOnboarding(
     .update({
       display_name: name, birthdate, business, onboarded_at: onboardedAt,
       gender: gender ?? DEFAULT_GENDER, interested_in: interestedIn ?? [],
+      lat: place.lat, lon: place.lon,
+      radius_km: place.radiusKm, place_label: place.placeLabel,
+    })
+    .eq("id", memberId).select(PROFILE_COLUMNS).single();
+  fail(error);
+  return toMe(data);
+}
+
+/**
+ * Changing where you are, or how far you will look. Coordinates arrive already
+ * rounded by src/lib/place.js; the database holds no more precision than that.
+ */
+export async function savePlace(memberId, { lat, lon, radiusKm, placeLabel }) {
+  const next = {
+    lat: lat ?? null,
+    lon: lon ?? null,
+    radiusKm: radiusKm ?? null,
+    placeLabel: placeLabel?.trim() || null,
+  };
+  if (DEMO) {
+    demoMe = { ...demoMe, ...next };
+    return demoMe;
+  }
+  const { data, error } = await supabase.from("profiles")
+    .update({
+      lat: next.lat, lon: next.lon,
+      radius_km: next.radiusKm, place_label: next.placeLabel,
     })
     .eq("id", memberId).select(PROFILE_COLUMNS).single();
   fail(error);
@@ -115,7 +160,7 @@ export async function loadCandidates(business) {
   if (DEMO) {
     return readProfiles(business)
       .filter((p) => !demoBlocked.has(p.id))
-      .filter((p) => !demoMe || mutuallyInterested(demoMe, p));
+      .filter((p) => !demoMe || (mutuallyInterested(demoMe, p) && withinRadius(demoMe, p)));
   }
   const { data, error } = await supabase.from("public_profiles").select("*");
   fail(error);
