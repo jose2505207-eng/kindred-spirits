@@ -138,6 +138,21 @@ export async function connect(otherId) {
   if (error?.code !== ALREADY_EXISTS) fail(error);
 }
 
+/**
+ * Ends a match without blocking.
+ *
+ * Both connection rows go, so neither of you is left connected to the other and
+ * connecting again needs both people a second time. The conversation then
+ * disappears for both and neither can write into it — enforced by
+ * my_conversation_ids(), not by this call. Nothing is destroyed: a later
+ * rematch reopens the thread you already had.
+ */
+export async function unmatch(otherId) {
+  if (DEMO) { demoConnected.delete(otherId); return; }
+  const { error } = await supabase.rpc("unmatch", { other: otherId });
+  fail(error);
+}
+
 /** Both of you drop out of each other's app; the database enforces it. */
 export async function block(otherId) {
   if (DEMO) { demoBlocked.add(otherId); return; }

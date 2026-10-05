@@ -13,7 +13,7 @@ import { cardsParagraph, lifePathParagraph, closingLine } from "../lib/copy.js";
  */
 export default function MatchReading({
   me, match, business, unlocked, onConnect, onSayHello, onBack,
-  backLabel = "Matches", helloProblem = null, onBlock, onReport,
+  backLabel = "Matches", helloProblem = null, onBlock, onReport, onUnmatch,
 }) {
   const [which, setWhich] = useState("spiritual");
   const them = match.profile;
@@ -55,18 +55,22 @@ export default function MatchReading({
             which={which} setWhich={setWhich} hit={hit} />
         : <Locked them={them} onConnect={onConnect} />}
 
-      {(onBlock || onReport) && <Safety name={them.name} onBlock={onBlock} onReport={onReport} />}
+      {(onBlock || onReport || onUnmatch) && (
+        <Safety name={them.name} onBlock={onBlock} onReport={onReport}
+          onUnmatch={onUnmatch} />
+      )}
     </div>
   );
 }
 
 /**
- * Block and report. The database enforces a block — neither person can see or
- * write to the other — so this only asks and records.
+ * Unmatch, block and report. The database enforces all three — an unmatched
+ * pair's conversation stops being theirs, and a blocked pair cannot see or
+ * write to each other at all — so this only asks and records.
  */
-function Safety({ name, onBlock, onReport }) {
+function Safety({ name, onBlock, onReport, onUnmatch }) {
   const first = name.split(" ")[0];
-  const [step, setStep] = useState(null);     // null | "block" | "report" | "reported"
+  const [step, setStep] = useState(null);     // null | "unmatch" | "block" | "report" | "reported"
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState(null);
@@ -88,6 +92,11 @@ function Safety({ name, onBlock, onReport }) {
       <hr className="ks-rule" />
       {step === null && (
         <div className="safety">
+          {onUnmatch && (
+            <button type="button" className="linkish" onClick={() => setStep("unmatch")}>
+              Unmatch {first}
+            </button>
+          )}
           {onBlock && (
             <button type="button" className="linkish" onClick={() => setStep("block")}>
               Block {first}
@@ -99,6 +108,26 @@ function Safety({ name, onBlock, onReport }) {
             </button>
           )}
         </div>
+      )}
+
+      {step === "unmatch" && (
+        <>
+          <p className="ks-note">
+            You will both drop out of each other's matches, and the
+            conversation between you will close. {first} is not told and is not
+            blocked, so you can still see each other on the Bowties wall — and
+            if you both connect again, the messages you already sent will be
+            there.
+          </p>
+          <div className="actions">
+            <button className="ks-ghost" disabled={busy} onClick={() => setStep(null)}>
+              Stay matched
+            </button>
+            <button className="ks-go" disabled={busy} onClick={() => run(onUnmatch)}>
+              Unmatch {first}
+            </button>
+          </div>
+        </>
       )}
 
       {step === "block" && (

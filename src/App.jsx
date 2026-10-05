@@ -4,7 +4,7 @@ import { readingFor } from "./lib/reading.js";
 import { DEMO, deleteAccount, signOut } from "./lib/supabase.js";
 import {
   block, connect, loadCandidates, loadConnected, loadMe, report, saveBowtie,
-  saveInterest, saveOnboarding, watchConnections,
+  saveInterest, saveOnboarding, unmatch, watchConnections,
 } from "./lib/people.js";
 import { ME, personId, startConversation } from "./lib/messaging.js";
 import { amIModerator } from "./lib/moderation.js";
@@ -133,6 +133,20 @@ export default function App({ memberId }) {
     await refresh();
   }, [refresh]);
 
+  // Unmatching leaves them visible — they are not blocked — so unlike a block
+  // this only closes the reading and the thread.
+  const onUnmatch = useCallback(async (id) => {
+    await unmatch(id);
+    setConnected((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+    setOpenId(null);
+    setThread(null);
+    await refresh();
+  }, [refresh]);
+
   if (me === undefined) {
     return problem ? <Trouble message={problem} /> : <div className="ks flat" aria-busy="true" />;
   }
@@ -201,6 +215,8 @@ export default function App({ memberId }) {
             helloProblem={helloProblem}
             onBlock={DEMO ? undefined : () => onBlock(open.profile.id)}
             onReport={DEMO ? undefined : (reason) => report(open.profile.id, reason)}
+            onUnmatch={connected.has(open.profile.id)
+              ? () => onUnmatch(open.profile.id) : undefined}
             backLabel={TAB_LABEL[tab]}
             onBack={closeReading} />
         : tab === "matches"
