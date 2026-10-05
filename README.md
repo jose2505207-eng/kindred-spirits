@@ -31,15 +31,21 @@ src/
   lib/cardArt.js         card codes and card-face URLs
   fixtures/profiles.js   35 seeded candidates, demo mode only
   lib/bowtie.js          bowtie shape, backdrops, emoji and image checks
+  lib/gender.js          the gender vocabulary and the mutual-interest rule
+  lib/moderation.js      reports a moderator reads, and suspension
   lib/messaging.js       the only file that knows where messages live
   lib/useMessaging.js    React bindings for the transport
   components/            Card, Spread, CardTurn, Tabs, Bowtie, AuthGate, Photos
-  screens/               SignIn, Onboarding, Reveal, Matches, MatchReading,
-                         AboutYou, BookReading, Messages, Thread,
-                         Community, BowtieEditor
+  screens/               SignIn, ResetPassword, Onboarding, Reveal, Matches,
+                         MatchReading, AboutYou, BookReading, Messages, Thread,
+                         Community, BowtieEditor, Moderation
 supabase/
   migrations/            the schema, RLS and storage, one file per concern
+  functions/
+    delete-account/      empties Storage, then deletes the caller's account
   database.types.ts      generated description of the schema
+public/
+  delete-account.html    how to delete your account, reachable without one
 public/card-art/         card faces (public domain) and their manifest, served with the app
 scripts/
   verify-cards.mjs       card art checked against the engine (runs in npm test)
@@ -98,9 +104,18 @@ no accounts, in-memory messages with one reply each.
 hook on the feed, or the reward for connecting? Both feeds are built. A pill
 above the tab bar switches between them.
 
-Not built: payments, the booking itself, push notifications, read receipts,
-account deletion, and a deployment of the backend-connected build.
+The gaps that blocked a launch are closed: an 18+ age gate enforced in the
+database, in-app account deletion that empties Storage before it removes the
+account, report moderation with suspension, gender and "interested in" with
+mutual filtering ahead of the engine, password reset, and unmatch. Every new
+rule is attacked by `scripts/rls-proof.mjs`.
+
+Not built: payments, the booking itself, push notifications, read receipts, a
+native wrapper, and a deployment of the backend-connected build.
 `npm run build` produces a static `dist/` that Vercel serves as-is.
+`docs/DESIGN.md` keeps the list of what is still needed before real people use
+it — an SMTP sender, a real deletion-request address, and the Pro-plan auth
+settings among them.
 
 ## Read this before changing the engine
 

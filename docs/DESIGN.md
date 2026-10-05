@@ -77,10 +77,25 @@ reading rather than in place of it. The feed and the wall still show bowties.
 
 ### Block and report
 
-At the foot of a match reading. A block takes both people out of each other's
-matches, wall, messages and photos, and neither can write to the other; the
-database enforces it, not the screens. A report goes to whoever moderates, and
-the reported person is not told.
+At the foot of a match reading, with unmatch beside them.
+
+**Unmatch** ends a match without the weight of a block: the conversation closes
+for both and neither can write into it, but they stay visible to each other and
+nothing is deleted, so connecting again reopens the thread they had. It removes
+both connection rows, so a later reconnection needs both people again.
+
+**Block** takes both people out of each other's matches, wall, messages and
+photos, and neither can write to the other; the database enforces it, not the
+screens.
+
+**Report** goes to whoever moderates, and the reported person is not told. A
+report has a status — open, actioned or dismissed — a reviewer and a note.
+Moderators are named in the `moderators` table, which has no client write path
+at all, and they get exactly two powers: read every report, and suspend a
+profile. A suspended member drops out of every feed, cannot message, and is
+told why the next time they open the app. The moderator screen is reached from
+About you, and only appears for a moderator — though the database, not that
+screen, is what refuses everybody else.
 
 ## Data model
 
@@ -108,7 +123,8 @@ cards (52 cards and the Joker, generated from the engine) ····· public/card
 | `connections` | one-way connects | both ends, unless blocked | you, to someone you can see; you withdraw your own |
 | `matches` | mutual connections, with a canonical `pair_key` | as `connections` | — |
 | `blocks` | who blocked whom | the blocker only | the blocker |
-| `reports` | reason, optionally the message | the reporter only | the reporter; moderation reads with the service role |
+| `reports` | reason, optionally the message, status, reviewer, note | the reporter, and any moderator | the reporter; a moderator reviews |
+| `moderators` | who moderates | only your own row, so you can ask "am I one?" | nobody — the service role or the dashboard |
 | `conversations` | `pair_key`, `last_message_at` | members, unless blocked | only `start_conversation()` |
 | `conversation_participants` | who is in each | as `conversations` | only `start_conversation()` |
 | `messages` | text, `sender_id`, `sent_at` | members, unless blocked | members, as themselves |
@@ -118,6 +134,21 @@ What the database enforces, whatever a client sends:
 
 - An onboarded profile has a name and a birthdate; the backdrop is one of the
   eight `BACKDROPS`; a bowtie caption is at most 60 characters.
+- A birthdate is at least 18 years ago, and never in the future. A CHECK cannot
+  read `current_date`, so both are triggers; onboarding mirrors the first.
+- `public_profiles` drops anyone the two of you are not **mutually interested**
+  in, before the feed is read and so before the engine ranks anything. It never
+  exposes `interested_in`.
+- A **suspended** profile leaves every feed, cannot send a message and cannot
+  open a conversation. Suspending is `set_profile_suspended()`, not a column a
+  client may write — granting `suspended_at` would let a suspended member lift
+  their own suspension through the "edit only your own row" policy.
+- **Unmatching** is one clause in `my_conversation_ids()`: the pair must still
+  be a mutual match. The thread disappears for both and neither can write into
+  it, while the rows stay, so a rematch reopens the same thread.
+- Deleting an account cascades every row a person owns, a trigger drops the
+  conversation each membership leaves behind, and a report about them survives
+  with `reported_id` null and `reported_deleted_at` stamped.
 - `start_conversation(other)` returns the same conversation for the same pair
   and refuses a pair that is not a mutual match or is blocked, with one message
   for both so nobody learns they were blocked.
@@ -144,16 +175,35 @@ What it never holds: a reading, a card assignment, a tier or a score.
 
 ### Before real people use it
 
-- **Deleting an account.** There is no flow for it. Deleting a user removes
-  their rows but not their files, so it has to empty their photo folder through
-  the Storage API first.
+Done since this list was written: **an 18+ age gate** (a trigger on `profiles`,
+mirrored in onboarding), **account deletion** (the `delete-account` Edge
+Function, which empties Storage before removing the account), **report
+moderation and suspension**, **gender and mutual-interest filtering**,
+**password reset**, and **unmatch**.
+
+Still open:
+
 - **Stray uploads.** A file whose upload succeeded but whose row was never
-  written stays in the bucket. A periodic sweep would catch it.
-- **Auth settings.** Leaked password protection needs the Pro plan, and sign-up
-  confirmation emails need a real SMTP sender instead of Supabase's rate-limited
-  default.
+  written stays in the bucket. A periodic sweep would catch it. Account
+  deletion no longer leaks files — it empties the folder first — but an
+  abandoned upload by a member who stays still does.
+- **Auth settings.** Leaked password protection needs the Pro plan, and
+  sign-up *and password-reset* emails need a real SMTP sender instead of
+  Supabase's rate-limited default. The app's own origin also has to be in the
+  project's allowed redirect URLs, or the reset link will not come back.
+- **The deletion-request page** at `/delete-account` carries a
+  `privacy@kindred-spirits.example` placeholder. Both stores require a real,
+  monitored mailbox there before submission.
 - **Signed photo URLs** work for anyone holding one until the hour is up.
 - **Birthdates** are visible to members; see the next section.
+- **A report dies with its reporter.** `reports.reported_id` is now `ON DELETE
+  SET NULL`, so a report survives the account it is about. `reporter_id` is
+  still `ON DELETE CASCADE`, so a member deleting their own account still
+  erases the reports they filed about other people. Whether that should match
+  the reported side is an open question.
+- **The first moderator** has to be inserted with the service role or from the
+  dashboard. That is deliberate — there is no client path into `moderators` —
+  but it means moderation cannot be set up from the app.
 
 ## Who can see a birth year
 
